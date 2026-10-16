@@ -21,18 +21,3 @@ export const PrinterIcon = () => (
     <path d="M7 9V3h10v6" /><rect x="3" y="9" width="18" height="8" rx="2" /><rect x="7" y="14" width="10" height="7" rx="1" fill="#fff" />
   </svg>
 );
-
-const CRAYON_COLORS = ['#e63946', '#2a9d8f', '#457b9d'];
-
-/** 1–3 Buntstifte als Symbol für die Schwierigkeitsstufe (für Kinder ohne Lesekenntnisse). */
-export const CrayonLevel = ({ n }: { n: number }) => (
-  <span class="crayons">
-    {Array.from({ length: n }, (_, i) => (
-      <svg key={i} width="16" height="40" viewBox="0 0 16 40">
-        <path d="M3 12 L8 2 L13 12 Z" fill="#f1d3a1" />
-        <path d="M6.5 5 L8 2 L9.5 5 Z" fill={CRAYON_COLORS[i]} />
-        <rect x="3" y="12" width="10" height="26" rx="2" fill={CRAYON_COLORS[i]} />
-      </svg>
-    ))}
-  </span>
-);

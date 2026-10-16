@@ -13,8 +13,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icon-192.png', 'icon-512.png', 'apple-touch-icon.png'],
       manifest: {
-        name: 'Malbilder',
-        short_name: 'Malbilder',
+        name: 'Malbilder67',
+        short_name: 'Malbilder67',
         description: 'Ausmalbilder für Kinder – aussuchen und drucken',
         lang: 'de',
         display: 'standalone',

@@ -42,7 +42,34 @@ img { -webkit-user-drag: none; }
 }
 .topbar h1 { margin: 0; text-align: center; font-size: clamp(24px, 5vw, 38px); font-weight: 650; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .topbar-right { display: flex; justify-content: flex-end; }
-.logo { font-size: 40px; }
+
+/* ---------- Logo „MALBILDER67“ ---------- */
+.topbar-logo { overflow: visible !important; }
+.logo-word {
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: 'Luckiest Guy', 'Fredoka Variable', system-ui, sans-serif;
+  line-height: 1; letter-spacing: 0.02em; white-space: nowrap;
+}
+.logo-big { font-size: clamp(30px, 8.2vw, 64px); padding: 6px 0 2px; }
+.logo-letter {
+  display: inline-block;
+  transform: rotate(var(--tilt));
+  -webkit-text-stroke: 0.12em #fff;
+  paint-order: stroke fill;
+  text-shadow: 0 0.07em 0 #2b2d42, 0 0.12em 0.08em rgba(43, 45, 66, 0.25);
+  animation: hop 0.6s both;
+}
+.logo-letter:nth-child(2n) { animation-delay: 0.05s; }
+.logo-letter:nth-child(3n) { animation-delay: 0.1s; }
+.logo-badge {
+  display: inline-block;
+  margin-left: 0.14em; padding: 0.2em 0.28em 0.08em;
+  font-size: 0.68em; line-height: 1; color: #fff;
+  background: #2b2d42; border: 0.1em solid #fff; border-radius: 0.38em;
+  box-shadow: 0 0.09em 0 #ffc300, 0 0.14em 0.1em rgba(43, 45, 66, 0.3);
+  transform: rotate(8deg) translateY(-0.15em);
+}
+@keyframes hop { from { opacity: 0; transform: translateY(-0.4em) rotate(var(--tilt)); } }
 
 .round-btn {
   width: 64px; height: 64px; border-radius: 50%;
@@ -85,21 +112,41 @@ img { -webkit-user-drag: none; }
 .tile-fav .tile-emoji svg { width: 55%; height: 55%; }
 @keyframes pop { from { opacity: 0; transform: scale(0.9); } }
 
-/* ---------- Stufen-Filter ---------- */
-.level-filter { display: flex; gap: 12px; justify-content: center; padding: 4px 16px 8px; flex-wrap: wrap; }
+/* ---------- Alters-Filter: Farbe + Alter ---------- */
+.level-filter { display: flex; gap: clamp(6px, 2vw, 14px); justify-content: center; padding: 4px 12px 12px; }
 .level-chip {
-  min-width: 76px; height: 64px; padding: 0 14px; border-radius: 20px;
-  background: var(--card); box-shadow: var(--shadow);
-  display: grid; place-items: center; border: 3px solid transparent;
+  --lv: var(--ink);
+  flex: 0 1 96px; min-width: 0; height: 72px; padding: 6px 4px; border-radius: 22px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--card); color: var(--lv);
+  border: 4px solid var(--lv);
+  box-shadow: 0 5px 0 color-mix(in srgb, var(--lv) 35%, transparent);
+  transition: transform 0.12s;
 }
-.level-chip.active { border-color: var(--ink); background: #fff3d1; }
-.chip-all { font-size: 20px; font-weight: 600; }
-.crayons { display: flex; gap: 3px; }
+.level-chip:active { transform: scale(0.94); }
+.level-chip.active { background: var(--lv); color: #fff; transform: translateY(-2px) scale(1.06); box-shadow: 0 6px 0 color-mix(in srgb, var(--lv) 60%, #000); }
+.chip-age { font-size: clamp(21px, 5.6vw, 26px); font-weight: 700; line-height: 1; }
+.chip-unit { font-size: 13px; font-weight: 600; opacity: 0.85; }
+.chip-all { --lv: #2b2d42; }
+.chip-dots { display: flex; gap: 4px; margin-bottom: 5px; }
+.chip-dots i { width: 13px; height: 13px; border-radius: 50%; border: 2px solid #fff; }
+
+.age-badge {
+  position: absolute; top: 10px; left: 10px; z-index: 1;
+  padding: 3px 10px 2px; border-radius: 999px;
+  background: var(--lv); color: #fff;
+  font-size: 17px; font-weight: 700; line-height: 1.2;
+  border: 3px solid #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+}
+.age-badge small { font-size: 0.7em; }
+.age-big { top: 14px; left: 14px; font-size: 22px; padding: 4px 14px 3px; }
+.tile-page { border-bottom-color: var(--tile); }
 
 /* ---------- Detailansicht ---------- */
 .detail { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 4px 16px calc(env(safe-area-inset-bottom) + 24px); }
 .detail-stage { display: flex; align-items: center; gap: 12px; width: 100%; justify-content: center; }
 .paper {
+  position: relative;
   background: #fff; border-radius: 10px; padding: 3%;
   box-shadow: 0 2px 0 rgba(0,0,0,.06), 0 18px 40px rgba(43, 45, 66, 0.18);
   height: min(62dvh, 150vw); aspect-ratio: 210 / 297;

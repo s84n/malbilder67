@@ -5,7 +5,9 @@ import { go, useRoute } from './router';
 import { actions, useStore } from './store';
 import { printImage } from './print';
 import { ParentArea } from './parents';
-import { BackIcon, CrayonLevel, HeartIcon, LockIcon, PrinterIcon, ArrowIcon } from './icons';
+import { BackIcon, HeartIcon, LockIcon, PrinterIcon, ArrowIcon } from './icons';
+import { Logo } from './logo';
+import { levelInfo, setLevels } from './levels';
 import type { Catalog, Category, ImageRef, Motif, Subcategory } from './types';
 
 const TILE_COLORS = ['#ffb703', '#8ecae6', '#90be6d', '#f28482', '#cdb4db', '#f4a261', '#4cc9f0', '#ffafcc'];
@@ -13,7 +15,7 @@ const TILE_COLORS = ['#ffb703', '#8ecae6', '#90be6d', '#f28482', '#cdb4db', '#f4
 export function App() {
   const [catalog, setCatalog] = useState<Catalog | null>(null);
   const [error, setError] = useState('');
-  useEffect(() => { loadCatalog().then(setCatalog, (e) => setError(String(e.message ?? e))); }, []);
+  useEffect(() => { loadCatalog().then((c) => { setLevels(c.levels); setCatalog(c); }, (e) => setError(String(e.message ?? e))); }, []);
 
   if (error) return <Message emoji="😕" text="Die Bilder konnten nicht geladen werden." detail={error} />;
   if (!catalog) return <Message emoji="🖍️" text="Einen Moment …" />;
@@ -54,23 +56,29 @@ function Screens({ catalog }: { catalog: Catalog }) {
 function TopBar({ title, up, right }: { title?: string; up?: () => void; right?: ComponentChildren }) {
   return (
     <header class="topbar">
-      {up ? <button class="round-btn" onClick={up} aria-label="Zurück"><BackIcon /></button> : <span class="logo">🖍️</span>}
-      <h1>{title ?? 'Malbilder'}</h1>
+      {up ? <button class="round-btn" onClick={up} aria-label="Zurück"><BackIcon /></button> : <span />}
+      {title ? <h1>{title}</h1> : <h1 class="topbar-logo"><Logo /></h1>}
       <div class="topbar-right">{right}</div>
     </header>
   );
 }
 
-function Tile({ img, label, color, onClick, square = true }: {
-  img: string; label: string; color: string; onClick: () => void; square?: boolean;
+function Tile({ img, label, color, onClick, square = true, level }: {
+  img: string; label: string; color: string; onClick: () => void; square?: boolean; level?: string;
 }) {
   const { settings } = useStore();
   return (
     <button class={`tile ${square ? 'tile-square' : 'tile-page'}`} style={{ '--tile': color }} onClick={onClick} aria-label={label}>
+      {level && <AgeBadge level={level} />}
       <img src={asset(img)} alt="" loading="lazy" draggable={false} />
       {settings.showLabels && <span class="tile-label">{label}</span>}
     </button>
   );
+}
+
+function AgeBadge({ level, big }: { level: string; big?: boolean }) {
+  const l = levelInfo(level);
+  return <span class={`age-badge ${big ? 'age-big' : ''}`} style={{ '--lv': l.color }}>{l.age}<small> J.</small></span>;
 }
 
 function Message({ emoji, text, detail }: { emoji: string; text: string; detail?: string }) {
@@ -129,15 +137,22 @@ function MotifList({ cat, sub }: { cat: Category; sub: Subcategory }) {
 }
 
 function LevelFilter({ value, onChange, levels }: { value: string; onChange: (v: string) => void; levels: string[] }) {
-  const options = ['all', ...levels];
   return (
-    <div class="level-filter" role="radiogroup" aria-label="Schwierigkeit">
-      {options.map((l, i) => (
-        <button key={l} class={`level-chip ${value === l ? 'active' : ''}`} onClick={() => onChange(l)} role="radio" aria-checked={value === l}
-          aria-label={l === 'all' ? 'Alle' : l}>
-          {l === 'all' ? <span class="chip-all">Alle</span> : <CrayonLevel n={i} />}
-        </button>
-      ))}
+    <div class="level-filter" role="radiogroup" aria-label="Alter">
+      <button class={`level-chip chip-all ${value === 'all' ? 'active' : ''}`} onClick={() => onChange('all')} role="radio" aria-checked={value === 'all'}>
+        <span class="chip-dots">{levels.map((l) => <i key={l} style={{ background: levelInfo(l).color }} />)}</span>
+        <span class="chip-age">Alle</span>
+      </button>
+      {levels.map((id) => {
+        const l = levelInfo(id);
+        return (
+          <button key={id} class={`level-chip ${value === id ? 'active' : ''}`} style={{ '--lv': l.color }} onClick={() => onChange(id)}
+            role="radio" aria-checked={value === id} aria-label={`${l.label}, ${l.age} Jahre`}>
+            <span class="chip-age">{l.age}</span>
+            <span class="chip-unit">Jahre</span>
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -153,7 +168,7 @@ function Gallery({ cat, sub, motif }: { cat: Category; sub: Subcategory; motif: 
       <TopBar title={motif.label} up={() => (single ? go('k', cat.id) : go('k', cat.id, sub.id))} />
       {levels.length > 1 && <LevelFilter value={level} onChange={setLevel} levels={levels} />}
       <main class="grid grid-pages">
-        {images.map((img, i) => <Tile key={img.id} img={img.thumb} label="" color={color(i)} square={false} onClick={() => go('bild', ...img.id.split('/'))} />)}
+        {images.map((img) => <Tile key={img.id} img={img.thumb} label="" color={levelInfo(img.level).color} level={img.level} square={false} onClick={() => go('bild', ...img.id.split('/'))} />)}
       </main>
     </>
   );
@@ -184,6 +199,7 @@ function Detail({ refItem }: { refItem: ImageRef }) {
         <div class="detail-stage">
           {motif.images.length > 1 && <button class="round-btn nav prev" onClick={() => go('bild', ...neighbour(-1).id.split('/'))} aria-label="Vorheriges Bild"><ArrowIcon dir="left" /></button>}
           <div class="paper">
+            <AgeBadge level={image.level} big />
             <img src={asset(image.print)} alt={motif.label} style={{ backgroundImage: `url(${asset(image.thumb)})` }} draggable={false} />
           </div>
           {motif.images.length > 1 && <button class="round-btn nav next" onClick={() => go('bild', ...neighbour(1).id.split('/'))} aria-label="Nächstes Bild"><ArrowIcon dir="right" /></button>}
