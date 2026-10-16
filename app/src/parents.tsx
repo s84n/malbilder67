@@ -109,6 +109,7 @@ function Settings({ catalog }: { catalog: Catalog }) {
         <div class="row"><span>{recent.length} zuletzt gedruckt</span><button class="small" onClick={() => actions.clearHistory()}>Löschen</button></div>
       </section>
 
+      <p class="hint center">Alle Bilder sind KI-generiert (Stable Diffusion XL / Juggernaut XL) – private, nicht-kommerzielle Nutzung, es werden keine Rechte beansprucht.</p>
       <p class="hint center">{total} Malbilder · Stand {new Date(catalog.version * 1000).toLocaleDateString('de-DE')}</p>
     </main>
   );

@@ -91,6 +91,7 @@ function Home({ cats, hasFavorites }: { cats: Category[]; hasFavorites: boolean 
   return (
     <>
       <TopBar right={<button class="round-btn subtle" onClick={() => go('eltern')} aria-label="Eltern-Bereich"><LockIcon /></button>} />
+      {cats.length === 0 && <Message emoji="🖍️" text="Hier gibt es bald Malbilder!" />}
       <main class="grid grid-big">
         {hasFavorites && (
           <button class="tile tile-square tile-fav" onClick={() => go('lieblinge')} aria-label="Meine Lieblinge">

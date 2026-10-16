@@ -77,3 +77,9 @@ npm run build     # Produktions-Build nach app/dist
 Vite + Preact + TypeScript, `vite-plugin-pwa` für Manifest und Service Worker, Hash-Routing.
 `.github/workflows/pages.yml` baut und veröffentlicht bei jedem Push auf `main`.
 In den Repo-Einstellungen unter **Pages → Source** einmalig **GitHub Actions** wählen.
+
+## Hinweis zu den Bildern
+
+Alle Malbilder und Icons sind KI-generiert (Stable Diffusion XL, Checkpoint Juggernaut XL v8) und
+für die private, nicht-kommerzielle Nutzung gedacht. Es werden keine Rechte an den Bildern beansprucht.
+Vor einer kommerziellen Nutzung die Lizenz des verwendeten Modells prüfen.
