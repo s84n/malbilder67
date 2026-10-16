@@ -1,5 +1,7 @@
 # 🖍️ Malbilder
 
+Stand, Entscheidungen und nächste Schritte: [PLAN.md](PLAN.md)
+
 Eine kindgerechte PWA zum Aussuchen und Drucken von Ausmalbildern – am Tablet oder Smartphone,
 komplett ohne Lesen: große bunte Bild-Kacheln, ein riesiger Drucken-Knopf, A4 in Schwarzweiß.
 
