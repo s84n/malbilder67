@@ -49,6 +49,7 @@ vorher `make build` ausführen).
 
 1. In `catalog/categories/*.yaml` ein Motiv ergänzen (deutsches Label, englisches `subject`, optional eigene `scenes`)
    oder eine neue Kategorie-Datei anlegen
+   (optional `variation`: eigene Liste statt Blickwinkel/Posen, auch je Stufe als `{klein: [...], default: [...]}` – siehe Mandalas)
 2. `make expand && make generate && make review && make build`
 
 Nur neue Jobs werden gerendert. Prompts, Stufen, Negativ-Prompt, Modell und Filter-Schwellwerte stehen in
