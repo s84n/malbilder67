@@ -13,6 +13,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icon-192.png', 'icon-512.png', 'apple-touch-icon.png'],
       manifest: {
+        id: base,
         name: 'Malbilder67',
         short_name: 'Malbilder67',
         description: 'Ausmalbilder für Kinder – aussuchen und drucken',
@@ -30,16 +31,22 @@ export default defineConfig({
         ],
       },
       workbox: {
-        // App, Katalog, Icons und Vorschaubilder sind sofort offline verfügbar;
-        // die großen Druckbilder werden beim ersten Ansehen gecacht.
-        globPatterns: ['**/*.{js,css,html,woff2,png,json}', 'img/icons/*.webp', 'img/p/**/*.webp'],
-        globIgnores: ['img/p/**/*.png'],
+        // Vorab nur App, Katalog und Menü-Icons (klein → Installation in Sekunden).
+        // Vorschau- und Druckbilder werden beim ersten Ansehen gecacht – alle vorab
+        // (>1.000 Dateien, ~37 MB) ließ die Installation auf Android minutenlang laufen und scheitern.
+        globPatterns: ['**/*.{js,css,html,woff2,png,json}', 'img/icons/*.webp'],
+        globIgnores: ['img/p/**'],
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
         runtimeCaching: [
           {
             urlPattern: ({ url }) => url.pathname.includes('/img/p/') && url.pathname.endsWith('.png'),
             handler: 'CacheFirst',
             options: { cacheName: 'druckbilder', expiration: { maxEntries: 400 } },
+          },
+          {
+            urlPattern: ({ url }) => url.pathname.includes('/img/p/') && url.pathname.endsWith('.webp'),
+            handler: 'CacheFirst',
+            options: { cacheName: 'vorschaubilder', expiration: { maxEntries: 3000 } },
           },
         ],
       },
