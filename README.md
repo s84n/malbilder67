@@ -1,91 +1,74 @@
-# 🖍️ Malbilder
+# 🖍️ Malbilder67
 
-Stand, Entscheidungen und nächste Schritte: [PLAN.md](PLAN.md)
+**Kostenlose Ausmalbilder für Kinder – aussuchen, antippen, drucken.**
+Ohne Werbung, ohne Anmeldung, ohne Datensammeln.
 
-Eine kindgerechte PWA zum Aussuchen und Drucken von Ausmalbildern – am Tablet oder Smartphone,
-komplett ohne Lesen: große bunte Bild-Kacheln, ein riesiger Drucken-Knopf, A4 in Schwarzweiß.
+👉 **[s84n.github.io/malbilder67](https://s84n.github.io/malbilder67/)**
 
-Die Bilder werden **vorab lokal** mit [Fooocus](https://github.com/lllyasviel/Fooocus) (SDXL) erzeugt,
-automatisch gefiltert, von Eltern freigegeben und als statische Seite auf GitHub Pages veröffentlicht.
+![Startseite, Bildauswahl und Druckansicht](docs/screenshots.png)
 
-```
-catalog/*.yaml ─expand─▶ Jobs (SQLite) ─generate (Fooocus)─▶ Rohbilder
-  ─postprocess + Auto-Filter─▶ A4-Druckseiten ─Review (Eltern)─▶ freigegeben
-  ─build─▶ app/public ─git push─▶ GitHub Actions ─▶ GitHub Pages (PWA)
-```
+## Worum geht's?
 
-## Für Kinder (und Eltern) – die App
+Mal schnell ein Ausmalbild drucken, und das Kind wünscht sich einen Dino, ein Einhorn oder einen Bagger?
+Statt sich durch Seiten voller Werbung und Pop-ups zu klicken, sucht sich das Kind das Bild hier selbst aus.
+Es braucht dafür nicht lesen zu können: große, bunte Bilder führen zum Ziel, ein großer Knopf druckt.
 
-- **Hauptmenü → Unterkategorie → Motiv → Bild**, z. B. Tiere → Dinos → Ankylosaurus
-- **3 Schwierigkeitsstufen** pro Motiv, als 1–3 Buntstifte dargestellt (Klein 3–5 J., Mittel 5–8 J., Groß 8+)
-- **Drucken**: öffnet den System-Druckdialog (AirPrint auf iPad/iPhone, Mopria/Standard-Druckdienst auf Android).
-  Beim ersten Mal den WLAN-Drucker, A4 und Schwarzweiß wählen – das Gerät merkt sich das.
-- **Meine Lieblinge**: Herz-Favoriten und „Zuletzt gedruckt“ (lokal auf dem Gerät)
-- **Eltern-Bereich** (Knopf „Eltern“ oben rechts, Freischaltung per Rechenaufgabe oder optionaler 4-stelliger PIN):
-  Kategorien und Unterkategorien ein-/ausblenden, Altersstufen ausblenden, Standard-Stufe, Tages-Drucklimit,
-  Beschriftungen, Verlauf löschen, Ersatz-Druckweg „Bild öffnen“, alles zurücksetzen
-- **Datenschutz**: keine Konten, Cookies, Tracker oder externen Dienste; alles bleibt im `localStorage` des Geräts
-  (PIN nur als SHA-256-Prüfsumme)
-- **Offline-fähig** und installierbar: im Browser „Zum Home-Bildschirm“ wählen
+- **Über 1.200 Malbilder** zu 18 Themen
+- **Für jedes Alter** – die Motive gibt es einfach (3–5 Jahre), mittel (5–8) und detailliert (8+)
+- **Druckt sauber auf A4** in Schwarzweiß, eine Seite pro Bild
+- **Funktioniert auf Tablet, Smartphone und PC** – am besten im Browser öffnen und
+  „Zum Startbildschirm hinzufügen“, dann wirkt es wie eine App; schon angesehene Bilder gehen auch offline
+- **Kostenlos und werbefrei**, kein Konto, keine Cookies, keine Tracker
 
-## Bilder erzeugen
+## Themen
 
-Voraussetzungen: Fooocus 2.5.5 unter `~/Fooocus` (sonst `FOOOCUS_DIR` setzen), NVIDIA-GPU, Python 3, Node 24.
+| | |
+|---|---|
+| 🦁 **Tiere** | Dinos, Bauernhof, Waldtiere, Haustiere, Safari & Zoo, Käfer & Schmetterlinge, Vögel, Kuschel-Stars |
+| 🐠 **Unterwasserwelt** | Delfin, Wal, Oktopus, Schildkröte, Hai, Seepferdchen … |
+| 🐴 **Pferde & Ponys** | Pferd, Pony, Fohlen, Reiten |
+| 🚗 **Fahrzeuge** | Autos, Baustelle, Feuerwehr & Polizei, Züge, Flugzeuge & Schiffe |
+| 🚀 **Weltraum** | Rakete, Astronaut, Planeten, Ufo … |
+| 🦄 **Fantasie** | Feen, Einhörner, Drachen, Meerjungfrauen, Prinzessinnen & Ritter |
+| 🤖 **Roboter** | vom Roboterhund bis zum Riesenroboter |
+| 🏰 **Häuser & Städte** | Burgen, Häuser, Stadt |
+| 🌻 **Natur** | Landschaften, Blumen & Pflanzen |
+| 👨‍👩‍👧 **Menschen** | Familie, Berufe, Spielen & Sport |
+| 🍦 **Essen** | Obst, Pizza, Eis, Süßigkeiten |
+| 🎂 **Feste** | Weihnachten, Ostern, Halloween, Geburtstag, Fasching, Schulanfang, Muttertag |
+| 🏴‍☠️ **Abenteuer** | Piraten, Superhelden, Wilder Westen, Ninja |
+| ⚽ **Sport** | Wintersport, Wassersport, Ballsport, Turnen & Tanzen |
+| 🎸 **Musik** | Instrumente, Musizieren |
+| 🍂 **Jahreszeiten** | Frühling, Sommer, Herbst, Winter |
+| 🎪 **Zirkus & Jahrmarkt** | Clown, Akrobatin, Karussell, Riesenrad … |
+| 🌀 **Mandalas & Muster** | Mandalas, Tier-Mandalas |
 
-```bash
-make setup        # Projekt-venv + npm-Pakete
-make expand       # Katalog → Jobs (idempotent)
-make icons        # bunte Menü-Icons rendern (~25 min)
-make generate     # alle Malbilder rendern (~3–4 h für ~1.150 Seiten auf einer RTX 4080)
-make review       # http://localhost:8765 – J freigeben, N verwerfen, R neu rendern, U rückgängig
-make build        # Freigegebenes nach app/public übernehmen
-git add -A && git commit -m "Neue Bilder" && git push   # → automatischer Deploy
-```
+## Für Eltern
 
-`make generate` kann jederzeit mit Strg+C abgebrochen werden und macht beim nächsten Start weiter.
-Rendern und Review können parallel laufen.
+Oben rechts auf der Startseite gibt es den Knopf **„Eltern“** – geschützt durch eine kleine Rechenaufgabe
+oder eine eigene PIN. Dort lässt sich einstellen:
 
-Zum lokalen Ausprobieren: `make preview && make dev` (nimmt auch ungeprüfte Bilder auf – so nicht committen,
-vorher `make build` ausführen).
+- **Themen ein- und ausblenden** – ganze Kategorien oder einzelne Bereiche, z. B. nur Halloween
+- **Altersstufen ausblenden** – z. B. die detaillierten Bilder für ein Kindergartenkind
+- **Tageslimit fürs Drucken** – damit nicht der ganze Papierstapel auf einmal draufgeht
+- Favoriten und Verlauf löschen, alles zurücksetzen
 
-### Neue Motive hinzufügen
+**Drucken:** Der Knopf öffnet den normalen Druckdialog des Geräts (AirPrint auf iPhone/iPad, Druckdienst auf Android).
+Beim ersten Mal den WLAN-Drucker, A4 und „Schwarzweiß“ wählen – das Gerät merkt sich das.
 
-1. In `catalog/categories/*.yaml` ein Motiv ergänzen (deutsches Label, englisches `subject`, optional eigene `scenes`)
-   oder eine neue Kategorie-Datei anlegen
-   (optional `variation`: eigene Liste statt Blickwinkel/Posen, auch je Stufe als `{klein: [...], default: [...]}` – siehe Mandalas)
-2. `make expand && make generate && make review && make build`
+## Datenschutz
 
-Nur neue Jobs werden gerendert. Prompts, Stufen, Negativ-Prompt, Modell und Filter-Schwellwerte stehen in
-`catalog/styles.yaml`. Nach Änderungen an den Schwellwerten wendet `make reprocess` den Auto-Filter neu an.
+Die App kennt keine Konten, zeigt keine Werbung und bindet keine fremden Dienste, Schriften oder Statistik-Tools ein.
+Favoriten, Einstellungen und der Druckzähler bleiben nur auf dem jeweiligen Gerät und werden nirgendwohin gesendet.
+Die Seite liegt auf GitHub Pages; GitHub erhält dabei – wie bei jeder Website – technisch die IP-Adresse beim Abruf.
 
-### Wie die Pipeline arbeitet
+## Über die Bilder
 
-| Schritt | Datei | Was passiert |
-|---|---|---|
-| Katalog | `catalog/` | 12 Kategorien, ~130 Motive, je 3 Stufen × 3 Varianten |
-| Jobs | `pipeline/expand.py` | Deterministische IDs und Seeds, Status in `work/state.sqlite` |
-| Rendern | `pipeline/fooocus_adapter.py` | Startet Fooocus ohne Web-UI und reicht Tasks direkt an dessen Worker (832×1216, Styles/Prompt-Expansion aus) |
-| Aufbereiten | `pipeline/postprocess.py` | Zuschneiden, auf A4 @ 300 dpi skalieren, binarisieren, Krümel entfernen → 1-Bit-PNG (~100 KB) + WebP-Vorschau |
-| Auto-Filter | `pipeline/postprocess.py` | Verwirft leere Bilder, Schwarzflächen, Graustufen-Schattierung, Rauschen – und rendert mit neuem Seed (max. 4 Versuche) |
-| Review | `pipeline/review/` | Lokale Seite für die Freigabe durch Eltern |
-| Build | `pipeline/build.py` | Kopiert Freigegebenes nach `app/public/img`, schreibt `catalog.json` und die App-Icons |
+Alle Malbilder wurden mit einer KI erzeugt (Stable Diffusion XL) und einzeln von Hand geprüft, bevor sie
+aufgenommen wurden. Sie sind für die private, nicht-kommerzielle Nutzung gedacht; es werden keine Rechte
+an den Bildern beansprucht. Sollte trotzdem einmal ein misslungenes Bild dabei sein, freue ich mich über
+einen Hinweis als [Issue](https://github.com/s84n/malbilder67/issues).
 
-`work/` (Rohbilder, Datenbank) ist nicht im Repo.
+---
 
-## App entwickeln
-
-```bash
-cd app
-npm run dev       # http://localhost:5173/malbilder67/ (auch im WLAN erreichbar)
-npm run build     # Produktions-Build nach app/dist
-```
-
-Vite + Preact + TypeScript, `vite-plugin-pwa` für Manifest und Service Worker, Hash-Routing.
-`.github/workflows/pages.yml` baut und veröffentlicht bei jedem Push auf `main`.
-In den Repo-Einstellungen unter **Pages → Source** einmalig **GitHub Actions** wählen.
-
-## Hinweis zu den Bildern
-
-Alle Malbilder und Icons sind KI-generiert (Stable Diffusion XL, Checkpoint Juggernaut XL v8) und
-für die private, nicht-kommerzielle Nutzung gedacht. Es werden keine Rechte an den Bildern beansprucht.
-Vor einer kommerziellen Nutzung die Lizenz des verwendeten Modells prüfen.
+<sub>Technik und Entwicklung: [ENTWICKLUNG.md](ENTWICKLUNG.md)</sub>
