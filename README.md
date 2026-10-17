@@ -21,8 +21,11 @@ catalog/*.yaml ─expand─▶ Jobs (SQLite) ─generate (Fooocus)─▶ Rohbild
 - **Drucken**: öffnet den System-Druckdialog (AirPrint auf iPad/iPhone, Mopria/Standard-Druckdienst auf Android).
   Beim ersten Mal den WLAN-Drucker, A4 und Schwarzweiß wählen – das Gerät merkt sich das.
 - **Meine Lieblinge**: Herz-Favoriten und „Zuletzt gedruckt“ (lokal auf dem Gerät)
-- **Eltern-Bereich** (Schloss oben rechts, Freischaltung per Rechenaufgabe): Standard-Stufe, Tages-Drucklimit,
-  Kategorien ausblenden, Beschriftungen, Verlauf löschen, Ersatz-Druckweg „Bild öffnen“
+- **Eltern-Bereich** (Knopf „Eltern“ oben rechts, Freischaltung per Rechenaufgabe oder optionaler 4-stelliger PIN):
+  Kategorien und Unterkategorien ein-/ausblenden, Altersstufen ausblenden, Standard-Stufe, Tages-Drucklimit,
+  Beschriftungen, Verlauf löschen, Ersatz-Druckweg „Bild öffnen“, alles zurücksetzen
+- **Datenschutz**: keine Konten, Cookies, Tracker oder externen Dienste; alles bleibt im `localStorage` des Geräts
+  (PIN nur als SHA-256-Prüfsumme)
 - **Offline-fähig** und installierbar: im Browser „Zum Home-Bildschirm“ wählen
 
 ## Bilder erzeugen

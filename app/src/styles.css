@@ -231,3 +231,22 @@ img { -webkit-user-drag: none; }
   #print-root { display: flex !important; align-items: center; justify-content: center; width: 100%; height: 280mm; overflow: hidden; }
   #print-root img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
 }
+
+/* ---------- Eltern-Knopf und -Bereich ---------- */
+.parent-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 1px;
+  padding: 6px 8px; border-radius: 16px; min-width: 60px;
+  background: rgba(0, 0, 0, 0.06); color: #4a4d5e; font-size: 12px; font-weight: 700;
+}
+.parent-btn:active { transform: scale(0.94); }
+.settings button.small { padding: 8px 14px; border-radius: 12px; background: #f5f1e8; font-size: 16px; }
+.settings button.small.primary { background: var(--print); color: #fff; }
+.settings button.small.danger { background: #fde2e2; color: #b42318; }
+.settings button.small:disabled { opacity: 0.45; }
+.settings .seg { margin-bottom: 8px; }
+.settings .cat-name { display: flex; align-items: center; gap: 6px; }
+.settings .expand { width: 32px; height: 32px; border-radius: 10px; background: #f5f1e8; font-size: 16px; transition: transform 0.15s; flex: none; }
+.settings .expand.open { transform: rotate(90deg); }
+.settings .sub-row { padding-left: 38px; font-size: 16px; }
+.settings input[type="checkbox"]:disabled { opacity: 0.4; }
+.settings input.pin { width: 110px; font: inherit; font-size: 20px; letter-spacing: 6px; text-align: center; padding: 6px; border-radius: 12px; border: 1px solid #ddd; }

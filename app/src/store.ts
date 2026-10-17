@@ -2,7 +2,9 @@ import { useEffect, useState } from 'preact/hooks';
 
 export interface Settings {
   level: string;            // 'all' oder Stufen-ID als Standardfilter
-  hidden: string[];         // ausgeblendete Kategorie-IDs
+  hidden: string[];         // ausgeblendete Kategorie-IDs („tiere“) und Unterkategorien („tiere/dinos“)
+  hiddenLevels: string[];   // ausgeblendete Altersstufen
+  pinHash: string;          // SHA-256 der Eltern-PIN, leer = Rechenaufgabe
   dailyLimit: number;       // 0 = unbegrenzt
   showLabels: boolean;
   printFallback: boolean;   // zusätzlicher „Bild öffnen“-Knopf, falls Drucken im Gerät hakt
@@ -18,7 +20,7 @@ interface State {
 
 const KEY = 'malbilder:v1';
 const defaults: State = {
-  settings: { level: 'all', hidden: [], dailyLimit: 0, showLabels: true, printFallback: false },
+  settings: { level: 'all', hidden: [], hiddenLevels: [], pinHash: '', dailyLimit: 0, showLabels: true, printFallback: false },
   favorites: [],
   recent: [],
   printsDay: '',
@@ -84,4 +86,5 @@ export const actions = {
   resetPrintCounter() { commit({ ...state, printsDay: today(), printsToday: 0 }); },
   clearHistory() { commit({ ...state, recent: [] }); },
   clearFavorites() { commit({ ...state, favorites: [] }); },
+  resetAll() { commit(structuredClone(defaults)); },
 };

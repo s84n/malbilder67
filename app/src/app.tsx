@@ -8,6 +8,7 @@ import { ParentArea } from './parents';
 import { BackIcon, HeartIcon, LockIcon, PrinterIcon, ArrowIcon } from './icons';
 import { Logo } from './logo';
 import { levelInfo, setLevels } from './levels';
+import { visibleCatalog } from './visible';
 import type { Catalog, Category, ImageRef, Motif, Subcategory } from './types';
 
 const TILE_COLORS = ['#ffb703', '#8ecae6', '#90be6d', '#f28482', '#cdb4db', '#f4a261', '#4cc9f0', '#ffafcc'];
@@ -22,15 +23,17 @@ export function App() {
   return <Screens catalog={catalog} />;
 }
 
-function Screens({ catalog }: { catalog: Catalog }) {
+function Screens({ catalog: full }: { catalog: Catalog }) {
   const route = useRoute();
   const store = useStore();
+  // Kinder sehen nur, was im Eltern-Bereich freigegeben ist – auch bei Favoriten und direkten Links.
+  const catalog = useMemo(() => visibleCatalog(full, store.settings), [full, store.settings]);
   const index = useMemo(() => indexImages(catalog), [catalog]);
   const [section, ...rest] = route;
-  const cats = catalog.categories.filter((c) => !store.settings.hidden.includes(c.id));
+  const cats = catalog.categories;
   const findCat = (id: string) => catalog.categories.find((c) => c.id === id);
 
-  if (section === 'eltern') return <ParentArea catalog={catalog} />;
+  if (section === 'eltern') return <ParentArea catalog={full} />;
   if (section === 'lieblinge') return <Favorites index={index} />;
   if (section === 'bild') {
     const ref = index.get(rest.join('/'));
@@ -48,7 +51,7 @@ function Screens({ catalog }: { catalog: Catalog }) {
     const motif = sub?.motifs.find((m) => m.id === rest[2]);
     if (cat && sub && motif) return <Gallery cat={cat} sub={sub} motif={motif} />;
   }
-  return <Home cats={cats} hasFavorites={store.favorites.length + store.recent.length > 0} />;
+  return <Home cats={cats} hasFavorites={[...store.favorites, ...store.recent].some((id) => index.has(id))} />;
 }
 
 /* ---------- Bausteine ---------- */
@@ -98,7 +101,7 @@ const color = (i: number) => TILE_COLORS[i % TILE_COLORS.length];
 function Home({ cats, hasFavorites }: { cats: Category[]; hasFavorites: boolean }) {
   return (
     <>
-      <TopBar right={<button class="round-btn subtle" onClick={() => go('eltern')} aria-label="Eltern-Bereich"><LockIcon /></button>} />
+      <TopBar right={<button class="parent-btn" onClick={() => go('eltern')} aria-label="Eltern-Bereich"><LockIcon /><span>Eltern</span></button>} />
       {cats.length === 0 && <Message emoji="🖍️" text="Hier gibt es bald Malbilder!" />}
       <main class="grid grid-big">
         {hasFavorites && (
