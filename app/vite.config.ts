@@ -13,7 +13,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icon-192.png', 'icon-512.png', 'apple-touch-icon.png'],
       manifest: {
-        id: base,
+        // Neue ID, weil Chrome auf einem Pixel eine verwaiste Installation der alten ID (= start_url) festhielt
+        id: base + '?app=2',
         name: 'Malbilder67',
         short_name: 'Malbilder67',
         description: 'Ausmalbilder für Kinder – aussuchen und drucken',
