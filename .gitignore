@@ -5,3 +5,10 @@ __pycache__/
 node_modules/
 app/dist/
 .venv/
+
+# Nur lokal: Notizen und Bild-Generator (separates Werkzeug, nicht Teil der App)
+PLAN.md
+ENTWICKLUNG.md
+Makefile
+pipeline/
+catalog/

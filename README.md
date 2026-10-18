@@ -68,7 +68,3 @@ Alle Malbilder wurden mit einer KI erzeugt (Stable Diffusion XL) und einzeln von
 aufgenommen wurden. Sie sind für die private, nicht-kommerzielle Nutzung gedacht; es werden keine Rechte
 an den Bildern beansprucht. Sollte trotzdem einmal ein misslungenes Bild dabei sein, freue ich mich über
 einen Hinweis als [Issue](https://github.com/s84n/malbilder67/issues).
-
----
-
-<sub>Technik und Entwicklung: [ENTWICKLUNG.md](ENTWICKLUNG.md)</sub>
