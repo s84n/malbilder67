@@ -13,7 +13,7 @@ Mal schnell ein Ausmalbild drucken, und das Kind wünscht sich einen Dino, ein E
 Statt sich durch Seiten voller Werbung und Pop-ups zu klicken, sucht sich das Kind das Bild hier selbst aus.
 Es braucht dafür nicht lesen zu können: große, bunte Bilder führen zum Ziel, ein großer Knopf druckt.
 
-- **Über 1.200 Malbilder** zu 18 Themen
+- **Über 1.200 Malbilder** zu 17 Themen
 - **Für jedes Alter** – die Motive gibt es einfach (3–5 Jahre), mittel (5–8) und detailliert (8+)
 - **Druckt sauber auf A4** in Schwarzweiß, eine Seite pro Bild
 - **Funktioniert auf Tablet, Smartphone und PC** – am besten im Browser öffnen und
@@ -40,7 +40,6 @@ Es braucht dafür nicht lesen zu können: große, bunte Bilder führen zum Ziel,
 | ⚽ **Sport** | Wintersport, Wassersport, Ballsport, Turnen & Tanzen |
 | 🎸 **Musik** | Instrumente, Musizieren |
 | 🍂 **Jahreszeiten** | Frühling, Sommer, Herbst, Winter |
-| 🎪 **Zirkus & Jahrmarkt** | Clown, Akrobatin, Karussell, Riesenrad … |
 | 🌀 **Mandalas & Muster** | Mandalas, Tier-Mandalas |
 
 ## Für Eltern
