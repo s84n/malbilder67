@@ -7,6 +7,7 @@ import { printImage } from './print';
 import { ParentArea } from './parents';
 import { BackIcon, HeartIcon, LockIcon, PrinterIcon, ArrowIcon } from './icons';
 import { Logo } from './logo';
+import { Ticker } from './ticker';
 import { levelInfo, setLevels } from './levels';
 import { visibleCatalog } from './visible';
 import type { Catalog, Category, ImageRef, Motif, Subcategory } from './types';
@@ -51,7 +52,7 @@ function Screens({ catalog: full }: { catalog: Catalog }) {
     const motif = sub?.motifs.find((m) => m.id === rest[2]);
     if (cat && sub && motif) return <Gallery cat={cat} sub={sub} motif={motif} />;
   }
-  return <Home cats={cats} hasFavorites={[...store.favorites, ...store.recent].some((id) => index.has(id))} />;
+  return <Home catalog={full} cats={cats} hasFavorites={[...store.favorites, ...store.recent].some((id) => index.has(id))} />;
 }
 
 /* ---------- Bausteine ---------- */
@@ -98,10 +99,11 @@ const color = (i: number) => TILE_COLORS[i % TILE_COLORS.length];
 
 /* ---------- Screens ---------- */
 
-function Home({ cats, hasFavorites }: { cats: Category[]; hasFavorites: boolean }) {
+function Home({ catalog, cats, hasFavorites }: { catalog: Catalog; cats: Category[]; hasFavorites: boolean }) {
   return (
     <>
       <TopBar right={<button class="parent-btn" onClick={() => go('eltern')} aria-label="Eltern-Bereich"><LockIcon /><span>Eltern</span></button>} />
+      {cats.length > 0 && <Ticker catalog={catalog} cats={cats} />}
       {cats.length === 0 && <Message emoji="🖍️" text="Hier gibt es bald Malbilder!" />}
       <main class="grid grid-big">
         {hasFavorites && (

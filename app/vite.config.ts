@@ -1,12 +1,14 @@
 import { defineConfig } from 'vite';
 import preact from '@preact/preset-vite';
 import { VitePWA } from 'vite-plugin-pwa';
+import pkg from './package.json' with { type: 'json' };
 
 // GitHub Pages liefert das Repo unter /<repo>/ aus.
 const base = process.env.BASE_PATH ?? '/malbilder67/';
 
 export default defineConfig({
   base,
+  define: { __APP_VERSION__: JSON.stringify(pkg.version) },
   plugins: [
     preact(),
     VitePWA({
