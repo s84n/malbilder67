@@ -223,12 +223,14 @@ img { -webkit-user-drag: none; }
 /* ---------- Druck: nur das Malbild, A4 Hochformat ---------- */
 #print-root { display: none; }
 
-@page { size: A4 portrait; margin: 8mm; }
+/* Druckseiten haben nur ~2 mm Eigenrand; 5 mm liegt knapp über dem Hardware-Rand üblicher Tintenstrahler (~3 mm).
+   Höhe = 297 mm − 2 × 5 mm, mit 1 mm Reserve gegen eine leere zweite Seite. */
+@page { size: A4 portrait; margin: 5mm; }
 
 @media print {
   html, body { background: #fff !important; margin: 0; }
   #app { display: none !important; }
-  #print-root { display: flex !important; align-items: center; justify-content: center; width: 100%; height: 280mm; overflow: hidden; }
+  #print-root { display: flex !important; align-items: center; justify-content: center; width: 100%; height: 286mm; overflow: hidden; }
   #print-root img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
 }
 
