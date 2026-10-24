@@ -1,14 +1,14 @@
-import type { Catalog, Category } from './types';
+import type { Category } from './types';
 
 const fmtDate = (d: Date) => d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
-/** Laufschrift auf der Startseite: Bilderzahl, Neuigkeiten aus dem Katalog, Version. */
-export function Ticker({ catalog, cats }: { catalog: Catalog; cats: Category[] }) {
+/** Laufschrift auf der Startseite: Bilderzahl, Version, Veröffentlichungsdatum. */
+export function Ticker({ cats }: { cats: Category[] }) {
   const images = cats.reduce((n, c) => n + c.subcategories.reduce((k, s) => k + s.motifs.reduce((l, m) => l + m.images.length, 0), 0), 0);
   const items = [
-    `🖍️ ${images.toLocaleString('de-DE')} Malbilder in ${cats.length} Kategorien`,
-    ...(catalog.news ?? []).map((n) => `✨ ${n.text} (${fmtDate(new Date(n.date))})`),
-    `📦 Version ${__APP_VERSION__} · Bilder-Stand ${fmtDate(new Date(catalog.version * 1000))}`,
+    `🖍️ ${images.toLocaleString('de-DE')} Malbilder`,
+    `📦 Version ${__APP_VERSION__}`,
+    `📅 Veröffentlicht am ${fmtDate(new Date(__BUILD_DATE__))}`,
   ];
   const text = items.join('   •   ');
   // Tempo gleich bleibend lesbar, egal wie lang der Text ist.

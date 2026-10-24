@@ -103,7 +103,7 @@ function Home({ catalog, cats, hasFavorites }: { catalog: Catalog; cats: Categor
   return (
     <>
       <TopBar right={<button class="parent-btn" onClick={() => go('eltern')} aria-label="Eltern-Bereich"><LockIcon /><span>Eltern</span></button>} />
-      {cats.length > 0 && <Ticker catalog={catalog} cats={cats} />}
+      {cats.length > 0 && <Ticker cats={cats} />}
       {cats.length === 0 && <Message emoji="🖍️" text="Hier gibt es bald Malbilder!" />}
       <main class="grid grid-big">
         {hasFavorites && (
