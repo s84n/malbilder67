@@ -43,6 +43,17 @@ img { -webkit-user-drag: none; }
 .topbar h1 { margin: 0; text-align: center; font-size: clamp(24px, 5vw, 38px); font-weight: 650; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .topbar-right { display: flex; justify-content: flex-end; }
 
+/* ---------- Suche ---------- */
+.search-box {
+  display: flex; align-items: center; gap: 10px;
+  margin: 4px clamp(16px, 3vw, 32px) 8px; padding: 0 18px;
+  background: var(--card); border-radius: 999px; box-shadow: var(--shadow); color: var(--muted);
+}
+.search-box input {
+  flex: 1; min-width: 0; height: 60px; border: 0; outline: 0; background: none;
+  font: inherit; font-size: 22px; color: var(--ink); -webkit-user-select: text; user-select: text;
+}
+
 /* ---------- Laufschrift (Startseite) ---------- */
 .ticker {
   margin: 0 16px 4px; overflow: hidden; border-radius: 999px;
@@ -96,8 +107,6 @@ img { -webkit-user-drag: none; }
 }
 .round-btn:active { transform: scale(0.92); }
 .round-btn.subtle { width: 48px; height: 48px; box-shadow: none; background: rgba(0, 0, 0, 0.05); color: var(--muted); }
-.round-btn.heart { color: #e63946; }
-.round-btn.heart.on { background: #ffe1e4; }
 
 /* ---------- Kachel-Raster ---------- */
 .grid { display: grid; gap: clamp(14px, 2.5vw, 24px); padding: 12px clamp(16px, 3vw, 32px) 48px; }
@@ -124,9 +133,9 @@ img { -webkit-user-drag: none; }
 .tile-square img { aspect-ratio: 1; padding: 8%; }
 .tile-page img { aspect-ratio: 210 / 297; padding: 6%; }
 .tile-label { padding: 4px 8px 12px; font-size: clamp(17px, 2.6vw, 22px); font-weight: 600; text-align: center; line-height: 1.15; }
-.tile-fav { --tile: #e63946; justify-content: center; }
-.tile-fav .tile-emoji { aspect-ratio: 1; width: 100%; display: grid; place-items: center; color: #e63946; }
-.tile-fav .tile-emoji svg { width: 55%; height: 55%; }
+.tile-recent { --tile: var(--print); justify-content: center; }
+.tile-recent .tile-emoji { aspect-ratio: 1; width: 100%; display: grid; place-items: center; color: var(--print); }
+.tile-recent .tile-emoji svg { width: 55%; height: 55%; }
 @keyframes pop { from { opacity: 0; transform: scale(0.9); } }
 
 /* ---------- Alters-Filter: Farbe + Alter ---------- */

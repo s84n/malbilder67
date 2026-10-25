@@ -5,7 +5,8 @@ import { go, useRoute } from './router';
 import { actions, useStore } from './store';
 import { printImage } from './print';
 import { ParentArea } from './parents';
-import { BackIcon, HeartIcon, LockIcon, PrinterIcon, ArrowIcon } from './icons';
+import { BackIcon, LockIcon, PrinterIcon, ArrowIcon, SearchIcon } from './icons';
+import { search } from './search';
 import { Logo } from './logo';
 import { Ticker } from './ticker';
 import { levelInfo, setLevels } from './levels';
@@ -27,7 +28,7 @@ export function App() {
 function Screens({ catalog: full }: { catalog: Catalog }) {
   const route = useRoute();
   const store = useStore();
-  // Kinder sehen nur, was im Eltern-Bereich freigegeben ist – auch bei Favoriten und direkten Links.
+  // Kinder sehen nur, was im Eltern-Bereich freigegeben ist – auch im Verlauf, in der Suche und bei direkten Links.
   const catalog = useMemo(() => visibleCatalog(full, store.settings), [full, store.settings]);
   const index = useMemo(() => indexImages(catalog), [catalog]);
   const [section, ...rest] = route;
@@ -35,7 +36,8 @@ function Screens({ catalog: full }: { catalog: Catalog }) {
   const findCat = (id: string) => catalog.categories.find((c) => c.id === id);
 
   if (section === 'eltern') return <ParentArea catalog={full} />;
-  if (section === 'lieblinge') return <Favorites index={index} />;
+  if (section === 'zuletzt') return <Recent index={index} />;
+  if (section === 'suche') return <Search cats={cats} />;
   if (section === 'bild') {
     const ref = index.get(rest.join('/'));
     if (ref) return <Detail refItem={ref} />;
@@ -52,15 +54,15 @@ function Screens({ catalog: full }: { catalog: Catalog }) {
     const motif = sub?.motifs.find((m) => m.id === rest[2]);
     if (cat && sub && motif) return <Gallery cat={cat} sub={sub} motif={motif} />;
   }
-  return <Home catalog={full} cats={cats} hasFavorites={[...store.favorites, ...store.recent].some((id) => index.has(id))} />;
+  return <Home catalog={full} cats={cats} hasRecent={store.recent.some((id) => index.has(id))} />;
 }
 
 /* ---------- Bausteine ---------- */
 
-function TopBar({ title, up, right }: { title?: string; up?: () => void; right?: ComponentChildren }) {
+function TopBar({ title, up, left, right }: { title?: string; up?: () => void; left?: ComponentChildren; right?: ComponentChildren }) {
   return (
     <header class="topbar">
-      {up ? <button class="round-btn" onClick={up} aria-label="Zurück"><BackIcon /></button> : <span />}
+      {up ? <button class="round-btn" onClick={up} aria-label="Zurück"><BackIcon /></button> : <div>{left}</div>}
       {title ? <h1>{title}</h1> : <h1 class="topbar-logo"><Logo /></h1>}
       <div class="topbar-right">{right}</div>
     </header>
@@ -99,19 +101,21 @@ const color = (i: number) => TILE_COLORS[i % TILE_COLORS.length];
 
 /* ---------- Screens ---------- */
 
-function Home({ catalog, cats, hasFavorites }: { catalog: Catalog; cats: Category[]; hasFavorites: boolean }) {
+function Home({ catalog, cats, hasRecent }: { catalog: Catalog; cats: Category[]; hasRecent: boolean }) {
   return (
     <>
-      <TopBar right={<button class="parent-btn" onClick={() => go('eltern')} aria-label="Eltern-Bereich"><LockIcon /><span>Eltern</span></button>} />
+      <TopBar left={cats.length > 0 && <button class="round-btn" onClick={() => go('suche')} aria-label="Suchen"><SearchIcon /></button>} right={<button class="parent-btn" onClick={() => go('eltern')} aria-label="Eltern-Bereich"><LockIcon /><span>Eltern</span></button>} />
       {cats.length > 0 && <Ticker cats={cats} />}
       {cats.length === 0 && <Message emoji="🖍️" text="Hier gibt es bald Malbilder!" />}
       <main class="grid grid-big">
-        {hasFavorites && (
-          <button class="tile tile-square tile-fav" onClick={() => go('lieblinge')} aria-label="Meine Lieblinge">
-            <span class="tile-emoji"><HeartIcon filled /></span>
-            <span class="tile-label">Meine Lieblinge</span>
-          </button>
-        )}
+        {hasRecent && (catalog.recentIcon
+          ? <Tile img={catalog.recentIcon} label="Zuletzt gedruckt" color="#2a9d8f" onClick={() => go('zuletzt')} />
+          : (
+            <button class="tile tile-square tile-recent" onClick={() => go('zuletzt')} aria-label="Zuletzt gedruckt">
+              <span class="tile-emoji"><PrinterIcon /></span>
+              <span class="tile-label">Zuletzt gedruckt</span>
+            </button>
+          ))}
         {cats.map((c, i) => <Tile key={c.id} img={c.icon} label={c.label} color={color(i)} onClick={() => go('k', c.id)} />)}
       </main>
     </>
@@ -184,7 +188,6 @@ function Detail({ refItem }: { refItem: ImageRef }) {
   const { image, motif, sub, cat } = refItem;
   const [celebrate, setCelebrate] = useState(false);
   const [blocked, setBlocked] = useState(false);
-  const fav = store.favorites.includes(image.id);
   const pos = motif.images.findIndex((i) => i.id === image.id);
   const neighbour = (d: number) => motif.images[(pos + d + motif.images.length) % motif.images.length];
 
@@ -198,8 +201,7 @@ function Detail({ refItem }: { refItem: ImageRef }) {
 
   return (
     <>
-      <TopBar title={motif.label} up={() => go('k', cat.id, sub.id, motif.id)}
-        right={<button class={`round-btn heart ${fav ? 'on' : ''}`} onClick={() => actions.toggleFavorite(image.id)} aria-label="Favorit"><HeartIcon filled={fav} /></button>} />
+      <TopBar title={motif.label} up={() => go('k', cat.id, sub.id, motif.id)} />
       <main class="detail">
         <div class="detail-stage">
           {motif.images.length > 1 && <button class="round-btn nav prev" onClick={() => go('bild', ...neighbour(-1).id.split('/'))} aria-label="Vorheriges Bild"><ArrowIcon dir="left" /></button>}
@@ -231,22 +233,44 @@ function Detail({ refItem }: { refItem: ImageRef }) {
   );
 }
 
-function Favorites({ index }: { index: Map<string, ImageRef> }) {
+function Recent({ index }: { index: Map<string, ImageRef> }) {
   const store = useStore();
-  const favs = store.favorites.map((id) => index.get(id)).filter(Boolean) as ImageRef[];
   const recent = store.recent.map((id) => index.get(id)).filter(Boolean) as ImageRef[];
-  const row = (items: ImageRef[]) => (
-    <div class="grid grid-pages">
-      {items.map((r, i) => <Tile key={r.image.id} img={r.image.thumb} label={r.motif.label} color={color(i)} square={false} onClick={() => go('bild', ...r.image.id.split('/'))} />)}
-    </div>
-  );
   return (
     <>
-      <TopBar title="Meine Lieblinge" up={() => go()} />
-      <main class="sections">
-        {favs.length > 0 && <section><h2><HeartIcon filled /> Lieblingsbilder</h2>{row(favs)}</section>}
-        {recent.length > 0 && <section><h2><PrinterIcon /> Zuletzt gedruckt</h2>{row(recent)}</section>}
-        {!favs.length && !recent.length && <Message emoji="💛" text="Noch keine Lieblinge – tippe beim Bild auf das Herz." />}
+      <TopBar title="Zuletzt gedruckt" up={() => go()} />
+      {recent.length
+        ? (
+          <main class="grid grid-pages">
+            {recent.map((r, i) => <Tile key={r.image.id} img={r.image.thumb} label={r.motif.label} color={color(i)} square={false} onClick={() => go('bild', ...r.image.id.split('/'))} />)}
+          </main>
+        )
+        : <Message emoji="🖨️" text="Noch nichts gedruckt." />}
+    </>
+  );
+}
+
+function Search({ cats }: { cats: Category[] }) {
+  const [query, setQuery] = useState(() => sessionStorage.getItem('suche') ?? '');
+  const hits = useMemo(() => (query.trim().length >= 2 ? search(cats, query) : []), [cats, query]);
+  const update = (q: string) => {
+    setQuery(q);
+    try { sessionStorage.setItem('suche', q); } catch { /* ignorieren */ }
+  };
+  return (
+    <>
+      <TopBar title="Suchen" up={() => go()} />
+      <div class="search-box">
+        <SearchIcon />
+        <input type="search" value={query} onInput={(e) => update(e.currentTarget.value)} placeholder="z. B. Bagger, Pferd, Drache"
+          autoFocus enterKeyHint="search" autoComplete="off" aria-label="Suchbegriff" />
+      </div>
+      {query.trim().length >= 2 && !hits.length && <Message emoji="🔍" text="Dazu gibt es leider kein Bild." />}
+      <main class="grid grid-pages">
+        {hits.slice(0, 60).map(({ cat, sub, motif }, i) => (
+          <Tile key={`${cat.id}/${sub.id}/${motif.id}`} img={motif.thumb} label={motif.label} color={color(i + 4)} square={false}
+            onClick={() => go('k', cat.id, sub.id, motif.id)} />
+        ))}
       </main>
     </>
   );

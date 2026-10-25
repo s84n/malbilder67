@@ -54,7 +54,7 @@ function Gate({ onOk }: { onOk: () => void }) {
 }
 
 function Settings({ catalog }: { catalog: Catalog }) {
-  const { settings, favorites, recent } = useStore();
+  const { settings, recent } = useStore();
   const used = actions.printsUsedToday();
   const total = catalog.categories.reduce((n, c) => n + c.subcategories.reduce((m, s) => m + s.motifs.reduce((k, mo) => k + mo.images.length, 0), 0), 0);
   const shownLevels = catalog.levels.filter((l) => !settings.hiddenLevels.includes(l.id));
@@ -123,20 +123,19 @@ function Settings({ catalog }: { catalog: Catalog }) {
 
       <section>
         <h2>Verlauf</h2>
-        <div class="row"><span>{favorites.length} Favoriten</span><button class="small" onClick={() => actions.clearFavorites()}>Löschen</button></div>
         <div class="row"><span>{recent.length} zuletzt gedruckt</span><button class="small" onClick={() => actions.clearHistory()}>Löschen</button></div>
       </section>
 
       <section>
         <h2>Datenschutz</h2>
         <p class="hint">
-          Die App hat keine Konten, keine Werbung, keine Cookies und keine Statistik-Dienste. Einstellungen, Favoriten,
+          Die App hat keine Konten, keine Werbung, keine Cookies und keine Statistik-Dienste. Einstellungen, Verlauf,
           Druckzähler und PIN (nur als Prüfsumme) bleiben ausschließlich auf diesem Gerät gespeichert und werden nirgendwohin
           gesendet. Geladen werden nur die Bilder selbst – von GitHub Pages, wo die App liegt.
         </p>
         <div class="row">
           <span>Alles auf diesem Gerät zurücksetzen</span>
-          <button class="small danger" onClick={() => { if (confirm('Wirklich alle Einstellungen, Favoriten, den Verlauf und die PIN löschen?')) { actions.resetAll(); go(); } }}>Zurücksetzen</button>
+          <button class="small danger" onClick={() => { if (confirm('Wirklich alle Einstellungen, den Verlauf und die PIN löschen?')) { actions.resetAll(); go(); } }}>Zurücksetzen</button>
         </div>
       </section>
 

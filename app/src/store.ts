@@ -12,7 +12,6 @@ export interface Settings {
 
 interface State {
   settings: Settings;
-  favorites: string[];      // Bild-IDs
   recent: string[];         // zuletzt gedruckt, neueste zuerst
   printsDay: string;        // Datum des Zählers (YYYY-MM-DD)
   printsToday: number;
@@ -21,7 +20,6 @@ interface State {
 const KEY = 'malbilder:v1';
 const defaults: State = {
   settings: { level: 'all', hidden: [], hiddenLevels: [], pinHash: '', dailyLimit: 0, showLabels: true, printFallback: false },
-  favorites: [],
   recent: [],
   printsDay: '',
   printsToday: 0,
@@ -31,7 +29,7 @@ function read(): State {
   try {
     const raw = localStorage.getItem(KEY);
     if (raw) {
-      const s = JSON.parse(raw);
+      const { favorites: _, ...s } = JSON.parse(raw);   // Favoriten gibt es seit v1.3 nicht mehr
       return { ...defaults, ...s, settings: { ...defaults.settings, ...s.settings } };
     }
   } catch { /* privater Modus o.ä. – mit Standardwerten weiter */ }
@@ -60,10 +58,6 @@ export function useStore(): State {
 const today = () => new Date().toISOString().slice(0, 10);
 
 export const actions = {
-  toggleFavorite(id: string) {
-    const has = state.favorites.includes(id);
-    commit({ ...state, favorites: has ? state.favorites.filter((f) => f !== id) : [id, ...state.favorites] });
-  },
   updateSettings(patch: Partial<Settings>) {
     commit({ ...state, settings: { ...state.settings, ...patch } });
   },
@@ -85,6 +79,5 @@ export const actions = {
   },
   resetPrintCounter() { commit({ ...state, printsDay: today(), printsToday: 0 }); },
   clearHistory() { commit({ ...state, recent: [] }); },
-  clearFavorites() { commit({ ...state, favorites: [] }); },
   resetAll() { commit(structuredClone(defaults)); },
 };

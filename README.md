@@ -50,7 +50,7 @@ oder eine eigene PIN. Dort lässt sich einstellen:
 - **Themen ein- und ausblenden** – ganze Kategorien oder einzelne Bereiche, z. B. nur Halloween
 - **Altersstufen ausblenden** – z. B. die detaillierten Bilder für ein Kindergartenkind
 - **Tageslimit fürs Drucken** – damit nicht der ganze Papierstapel auf einmal draufgeht
-- Favoriten und Verlauf löschen, alles zurücksetzen
+- Verlauf löschen, alles zurücksetzen
 
 **Drucken:** Der Knopf öffnet den normalen Druckdialog des Geräts (AirPrint auf iPhone/iPad, Druckdienst auf Android).
 Beim ersten Mal den WLAN-Drucker, A4 und „Schwarzweiß“ wählen – das Gerät merkt sich das.
@@ -58,7 +58,7 @@ Beim ersten Mal den WLAN-Drucker, A4 und „Schwarzweiß“ wählen – das Ger�
 ## Datenschutz
 
 Die App kennt keine Konten, zeigt keine Werbung und bindet keine fremden Dienste, Schriften oder Statistik-Tools ein.
-Favoriten, Einstellungen und der Druckzähler bleiben nur auf dem jeweiligen Gerät und werden nirgendwohin gesendet.
+Verlauf, Einstellungen und der Druckzähler bleiben nur auf dem jeweiligen Gerät und werden nirgendwohin gesendet.
 Die Seite liegt auf GitHub Pages; GitHub erhält dabei – wie bei jeder Website – technisch die IP-Adresse beim Abruf.
 
 ## Über die Bilder

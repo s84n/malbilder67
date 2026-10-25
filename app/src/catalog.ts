@@ -8,7 +8,7 @@ export async function loadCatalog(): Promise<Catalog> {
 
 export const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 
-/** Index Bild-ID → Fundstelle, für Favoriten, Verlauf und Detailseite. */
+/** Index Bild-ID → Fundstelle, für Verlauf und Detailseite. */
 export function indexImages(catalog: Catalog): Map<string, ImageRef> {
   const map = new Map<string, ImageRef>();
   for (const cat of catalog.categories)
