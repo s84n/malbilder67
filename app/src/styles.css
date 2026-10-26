@@ -121,6 +121,12 @@ img { -webkit-user-drag: none; }
 .grid { display: grid; gap: clamp(14px, 2.5vw, 24px); padding: 12px clamp(16px, 3vw, 32px) 48px; }
 .grid-big { grid-template-columns: repeat(auto-fill, minmax(min(150px, 42vw), 1fr)); }
 .grid-pages { grid-template-columns: repeat(auto-fill, minmax(min(150px, 42vw), 1fr)); }
+/* Smartphone ab 375 px: drei Spalten, damit 20 Themen nicht zehn Reihen brauchen */
+@media (min-width: 375px) and (max-width: 599px) {
+  .grid-big { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding-inline: 16px; }
+  .grid-big .tile { border-radius: 20px; border-bottom-width: 6px; }
+  .grid-big .tile-label { font-size: 15px; padding: 4px 4px 9px; max-width: 100%; hyphens: auto; overflow-wrap: break-word; }
+}
 @media (min-width: 900px) {
   .grid-big { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
   .grid-pages { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }

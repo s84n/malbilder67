@@ -13,7 +13,14 @@ import { levelInfo, setLevels } from './levels';
 import { visibleCatalog } from './visible';
 import type { Catalog, Category, ImageRef, Motif, Subcategory } from './types';
 
-const TILE_COLORS = ['#ffb703', '#8ecae6', '#90be6d', '#f28482', '#cdb4db', '#f4a261', '#4cc9f0', '#ffafcc'];
+/** Feste Farbe je Kategorie – Kinder finden „ihr“ Thema an der Farbe wieder; Unterkategorien und Motive erben sie. */
+const CAT_COLORS: Record<string, string> = {
+  tiere: '#f7931e', dinos: '#2fb36d', meer: '#1fa2d6', pferde: '#b5651d', fahrzeuge: '#e5383b',
+  flugzeuge: '#29b6c8', schiffe: '#1d5fa8', weltraum: '#3d4fb8', fantasie: '#ff5fa2', roboter: '#7a8394',
+  gebaeude: '#8d6e63', natur: '#4f9d3a', menschen: '#ef7d57', essen: '#ffb703', feste: '#6b3fa0',
+  abenteuer: '#c1440e', sport: '#00a6a6', musik: '#9b5de5', jahreszeiten: '#8bc34a', mandalas: '#d63384',
+};
+const catColor = (cat: Category) => CAT_COLORS[cat.id] ?? '#ffb703';
 
 export function App() {
   const [catalog, setCatalog] = useState<Catalog | null>(null);
@@ -97,8 +104,6 @@ function Message({ emoji, text, detail }: { emoji: string; text: string; detail?
   );
 }
 
-const color = (i: number) => TILE_COLORS[i % TILE_COLORS.length];
-
 /* ---------- Screens ---------- */
 
 function Home({ cats, recent }: { cats: Category[]; recent: ImageRef[] }) {
@@ -126,7 +131,7 @@ function Home({ cats, recent }: { cats: Category[]; recent: ImageRef[] }) {
       )}
       {cats.length > 0 && <h2 class="home-h home-themes">Alle Themen</h2>}
       <main class="grid grid-big">
-        {cats.map((c, i) => <Tile key={c.id} img={c.icon} label={c.label} color={color(i)} onClick={() => go('k', c.id)} />)}
+        {cats.map((c) => <Tile key={c.id} img={c.icon} label={c.label} color={catColor(c)} onClick={() => go('k', c.id)} />)}
       </main>
     </>
   );
@@ -137,7 +142,7 @@ function SubList({ cat }: { cat: Category }) {
     <>
       <TopBar title={cat.label} up={() => go()} />
       <main class="grid grid-big">
-        {cat.subcategories.map((s, i) => <Tile key={s.id} img={s.icon} label={s.label} color={color(i + 2)} onClick={() => go('k', cat.id, s.id)} />)}
+        {cat.subcategories.map((s) => <Tile key={s.id} img={s.icon} label={s.label} color={catColor(cat)} onClick={() => go('k', cat.id, s.id)} />)}
       </main>
     </>
   );
@@ -149,7 +154,7 @@ function MotifList({ cat, sub }: { cat: Category; sub: Subcategory }) {
     <>
       <TopBar title={single ? cat.label : sub.label} up={() => (single ? go() : go('k', cat.id))} />
       <main class="grid grid-pages">
-        {sub.motifs.map((m, i) => <Tile key={m.id} img={m.thumb} label={m.label} color={color(i + 4)} square={false} onClick={() => go('k', cat.id, sub.id, m.id)} />)}
+        {sub.motifs.map((m) => <Tile key={m.id} img={m.thumb} label={m.label} color={catColor(cat)} square={false} onClick={() => go('k', cat.id, sub.id, m.id)} />)}
       </main>
     </>
   );
@@ -287,7 +292,7 @@ function Recent({ index }: { index: Map<string, ImageRef> }) {
       {recent.length
         ? (
           <main class="grid grid-pages">
-            {recent.map((r, i) => <Tile key={r.image.id} img={r.image.thumb} label={r.motif.label} color={color(i)} square={false} onClick={() => go('bild', ...r.image.id.split('/'))} />)}
+            {recent.map((r) => <Tile key={r.image.id} img={r.image.thumb} label={r.motif.label} color={catColor(r.cat)} square={false} onClick={() => go('bild', ...r.image.id.split('/'))} />)}
           </main>
         )
         : <Message emoji="🖨️" text="Noch nichts gedruckt." />}
@@ -312,8 +317,8 @@ function Search({ cats }: { cats: Category[] }) {
       </div>
       {query.trim().length >= 2 && !hits.length && <Message emoji="🔍" text="Dazu gibt es leider kein Bild." />}
       <main class="grid grid-pages">
-        {hits.slice(0, 60).map(({ cat, sub, motif }, i) => (
-          <Tile key={`${cat.id}/${sub.id}/${motif.id}`} img={motif.thumb} label={motif.label} color={color(i + 4)} square={false}
+        {hits.slice(0, 60).map(({ cat, sub, motif }) => (
+          <Tile key={`${cat.id}/${sub.id}/${motif.id}`} img={motif.thumb} label={motif.label} color={catColor(cat)} square={false}
             onClick={() => go('k', cat.id, sub.id, motif.id)} />
         ))}
       </main>
