@@ -68,7 +68,8 @@ img { -webkit-user-drag: none; }
 .season-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .season-text small { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #ffd98a; }
 .season-text b { font-size: clamp(18px, 5.4vw, 22px); font-weight: 700; line-height: 1.15; }
-.season-arrow { flex: none; display: grid; place-items: center; }
+.season-arrow { flex: none; display: flex; align-items: center; gap: 2px; }
+.season-cta, .topbar-search, .detail-levels { display: none; }
 
 .home-h { margin: 0; font-size: 17px; font-weight: 700; color: #3a3c52; }
 .home-themes { padding: 20px clamp(16px, 3vw, 32px) 0; }
@@ -206,6 +207,7 @@ img { -webkit-user-drag: none; }
   min-height: calc(100dvh - 84px - env(safe-area-inset-top));
   padding-top: 4px;
 }
+.detail-left { flex: 1; width: 100%; display: flex; flex-direction: column; }
 .detail-stage {
   flex: 1; display: flex; align-items: center; justify-content: center; gap: var(--gap);
   width: 100%; padding: 0 var(--pad); touch-action: pan-y;
@@ -345,3 +347,61 @@ img { -webkit-user-drag: none; }
 .settings input[type="checkbox"]:disabled { opacity: 0.4; }
 .settings input.pin { width: 110px; font: inherit; font-size: 20px; letter-spacing: 6px; text-align: center; padding: 6px; border-radius: 12px; border: 1px solid #ddd; }
 .settings .pin-hint { border: 3px solid var(--accent); }
+
+/* ---------- Desktop ---------- */
+@media (hover: hover) {
+  .tile:hover, .round-btn:hover { transform: translateY(-6px) rotate(-1deg);
+    box-shadow: 0 11px 0 rgba(43,45,66,.10), 0 18px 30px rgba(43,45,66,.12); }
+}
+button:focus-visible, a:focus-visible { outline: 4px solid #1f7a70; outline-offset: 4px; }
+
+@media (min-width: 900px) {
+  /* Inhalte auf 1200 px begrenzen, Hintergründe laufen weiter über die volle Breite */
+  .topbar { padding-inline: max(16px, calc((100% - 1200px) / 2)); }
+  .grid, .home-top, .home-themes { padding-inline: max(32px, calc((100% - 1200px) / 2)); }
+
+  /* Startseite: Logo links, Suchfeld in der Mitte */
+  .topbar-home { grid-template-columns: auto 1fr auto; gap: 32px; }
+  .topbar-home .topbar-left { display: none; }
+  .topbar-home .topbar-logo { justify-content: flex-start; }
+  .topbar-search {
+    display: flex; align-items: center; gap: 12px; justify-self: center;
+    width: 100%; max-width: 680px; height: 58px; padding: 0 22px;
+    background: var(--card); border-radius: 999px; box-shadow: var(--shadow); color: var(--muted); cursor: text;
+  }
+  .topbar-search input {
+    flex: 1; min-width: 0; height: 100%; border: 0; outline: 0; background: none;
+    font: inherit; font-size: 19px; color: var(--ink); -webkit-user-select: text; user-select: text;
+  }
+  .topbar-search:focus-within { outline: 4px solid #1f7a70; outline-offset: 2px; }
+
+  /* Saison-Karte und „Zuletzt gedruckt“ nebeneinander (2 : 1) */
+  .home-top { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; padding-top: 12px; }
+  .home-top > :only-child { grid-column: 1 / -1; }
+  .season-card { min-height: 150px; padding: 24px 28px; gap: 22px; }
+  .season-icon { width: 96px; height: 96px; border-radius: 22px; }
+  .season-text small { font-size: 14px; }
+  .season-text b { font-size: clamp(22px, 2.3vw, 30px); }
+  .season-arrow { padding: 12px 18px 12px 24px; border-radius: 999px; background: #ffc300; color: var(--ink); font-size: 19px; font-weight: 700; }
+  .season-arrow svg { width: 22px; height: 22px; }
+  .season-cta { display: inline; }
+  .recent-row { padding: 18px 22px; border-radius: 24px; background: var(--card); box-shadow: var(--shadow); }
+  .home-themes { padding-top: 28px; font-size: 20px; }
+
+  /* Bildseite zweispaltig: links das Blatt, rechts Alter, Drucken, Teilen */
+  .detail {
+    --reserve: 170px;
+    display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 32px; align-items: center;
+    max-width: 1200px; margin: 0 auto; padding: 8px 32px 32px;
+  }
+  .paper {
+    height: min(
+      calc(100dvh - var(--reserve) - env(safe-area-inset-top) - env(safe-area-inset-bottom)),
+      calc((min(100vw, 1200px) - 64px - 380px - 32px - 2 * (var(--pad) + var(--nav) + var(--gap))) * 297 / 210),
+      1100px
+    );
+  }
+  .print-bar { position: static; margin: 0; padding: 24px; gap: 14px; border-radius: 28px; box-shadow: var(--shadow); }
+  .detail-levels { display: flex; gap: 10px; width: 100%; margin-bottom: 6px; }
+  .detail-levels .level-chip { flex: 1; }
+}

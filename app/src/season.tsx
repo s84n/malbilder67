@@ -49,7 +49,7 @@ export function SeasonCard({ cats }: { cats: Category[] }) {
           <small>{p.overline}</small>
           <b>{p.title}</b>
         </span>
-        <span class="season-arrow" aria-hidden="true"><ArrowIcon dir="right" /></span>
+        <span class="season-arrow" aria-hidden="true"><span class="season-cta">Ansehen</span><ArrowIcon dir="right" /></span>
       </button>
     );
   }

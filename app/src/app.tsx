@@ -78,14 +78,30 @@ function useCompact() {
   return compact;
 }
 
-function TopBar({ title, up, left, right }: { title?: string; up?: () => void; left?: ComponentChildren; right?: ComponentChildren }) {
+function TopBar({ title, up, left, right, search }: { title?: string; up?: () => void; left?: ComponentChildren; right?: ComponentChildren; search?: boolean }) {
   const compact = useCompact();
   return (
-    <header class={`topbar ${compact ? 'compact' : ''}`}>
-      {up ? <button class="round-btn" onClick={up} aria-label="Zurück"><BackIcon /></button> : <div>{left}</div>}
+    <header class={`topbar ${compact ? 'compact' : ''} ${search ? 'topbar-home' : ''}`}>
+      {up ? <button class="round-btn" onClick={up} aria-label="Zurück"><BackIcon /></button> : <div class="topbar-left">{left}</div>}
       {title ? <h1>{title}</h1> : <h1 class="topbar-logo"><Logo /></h1>}
+      {search && <HeaderSearch />}
       <div class="topbar-right">{right}</div>
     </header>
+  );
+}
+
+/** Suchfeld direkt in der Kopfzeile (nur am Desktop sichtbar): beim ersten Tippen geht es auf die Suchseite weiter. */
+function HeaderSearch() {
+  const start = (q: string) => {
+    try { sessionStorage.setItem('suche', q); } catch { /* ignorieren */ }
+    go('suche');
+  };
+  return (
+    <label class="topbar-search">
+      <SearchIcon />
+      <input type="search" placeholder="Was möchtest du malen? z. B. Bagger, Pferd, Drache" aria-label="Suchbegriff"
+        autoComplete="off" enterKeyHint="search" onInput={(e) => start(e.currentTarget.value)} />
+    </label>
   );
 }
 
@@ -126,7 +142,7 @@ function Message({ emoji, text, detail }: { emoji: string; text: string; detail?
 function Home({ cats, recent }: { cats: Category[]; recent: ImageRef[] }) {
   return (
     <>
-      <TopBar left={cats.length > 0 && <button class="round-btn" onClick={() => go('suche')} aria-label="Suchen"><SearchIcon /></button>} right={<button class="parent-btn" onClick={() => go('eltern')} aria-label="Eltern-Bereich"><LockIcon /><span>Eltern</span></button>} />
+      <TopBar search={cats.length > 0} left={cats.length > 0 && <button class="round-btn" onClick={() => go('suche')} aria-label="Suchen"><SearchIcon /></button>} right={<button class="parent-btn" onClick={() => go('eltern')} aria-label="Eltern-Bereich"><LockIcon /><span>Eltern</span></button>} />
       {cats.length === 0 && <Message emoji="🖍️" text="Hier gibt es bald Malbilder!" />}
       {cats.length > 0 && (
         <div class="home-top">
@@ -224,6 +240,7 @@ function Detail({ refItem }: { refItem: ImageRef }) {
   const touch = useRef<{ x: number; y: number } | null>(null);
   const pos = motif.images.findIndex((i) => i.id === image.id);
   const several = motif.images.length > 1;
+  const levels = [...new Set(motif.images.map((i) => i.level))];
   const neighbour = (d: number) => motif.images[(pos + d + motif.images.length) % motif.images.length];
   const show = (d: number) => go('bild', ...neighbour(d).id.split('/'));
 
@@ -266,20 +283,37 @@ function Detail({ refItem }: { refItem: ImageRef }) {
     <>
       <TopBar title={motif.label} up={() => go('k', cat.id, sub.id, motif.id)} />
       <main class="detail">
-        <div class="detail-stage" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-          {several && <button class="round-btn nav prev" onClick={() => show(-1)} aria-label="Vorheriges Bild"><ArrowIcon dir="left" /></button>}
-          <div class="paper">
-            <AgeBadge level={image.level} big />
-            <img src={asset(image.print)} alt={motif.label} style={{ backgroundImage: `url(${asset(image.thumb)})` }} draggable={false} />
+        <div class="detail-left">
+          <div class="detail-stage" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+            {several && <button class="round-btn nav prev" onClick={() => show(-1)} aria-label="Vorheriges Bild"><ArrowIcon dir="left" /></button>}
+            <div class="paper">
+              <AgeBadge level={image.level} big />
+              <img src={asset(image.print)} alt={motif.label} style={{ backgroundImage: `url(${asset(image.thumb)})` }} draggable={false} />
+            </div>
+            {several && <button class="round-btn nav next" onClick={() => show(1)} aria-label="Nächstes Bild"><ArrowIcon dir="right" /></button>}
           </div>
-          {several && <button class="round-btn nav next" onClick={() => show(1)} aria-label="Nächstes Bild"><ArrowIcon dir="right" /></button>}
+          {several && (
+            <div class="dots" aria-label={`Bild ${pos + 1} von ${motif.images.length}`}>
+              {motif.images.map((img, i) => <span key={img.id} class={i === pos ? 'on' : ''} />)}
+            </div>
+          )}
         </div>
-        {several && (
-          <div class="dots" aria-label={`Bild ${pos + 1} von ${motif.images.length}`}>
-            {motif.images.map((img, i) => <span key={img.id} class={i === pos ? 'on' : ''} />)}
-          </div>
-        )}
         <div class="print-bar">
+          {levels.length > 1 && (
+            <div class="detail-levels" role="radiogroup" aria-label="Alter">
+              {levels.map((id) => {
+                const l = levelInfo(id);
+                return (
+                  <button key={id} class={`level-chip ${image.level === id ? 'active' : ''}`} style={{ '--lv': l.color }} role="radio" aria-checked={image.level === id}
+                    aria-label={`${l.label}, ${l.age} Jahre`} onClick={() => image.level !== id && go('bild', ...motif.images.find((i) => i.level === id)!.id.split('/'))}>
+                    <span class="chip-stars" aria-hidden="true">{l.stars}</span>
+                    <span class="chip-age">{l.age}</span>
+                    <span class="chip-unit">Jahre</span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
           <button class="print-btn" onClick={onPrint} aria-label="Drucken">
             <PrinterIcon />
             <span>Drucken</span>
