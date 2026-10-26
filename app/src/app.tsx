@@ -104,7 +104,11 @@ function Tile({ img, label, color, onClick, square = true, level }: {
 
 function AgeBadge({ level, big }: { level: string; big?: boolean }) {
   const l = levelInfo(level);
-  return <span class={`age-badge ${big ? 'age-big' : ''}`} style={{ '--lv': l.color }}>{l.age}<small> J.</small></span>;
+  return (
+    <span class={`age-badge ${big ? 'age-big' : ''}`} style={{ '--lv': l.color }}>
+      <span class="stars" aria-hidden="true">{l.stars}</span> {l.age}<small> J.</small>
+    </span>
+  );
 }
 
 function Message({ emoji, text, detail }: { emoji: string; text: string; detail?: string }) {
@@ -185,6 +189,7 @@ function LevelFilter({ value, onChange, levels }: { value: string; onChange: (v:
         return (
           <button key={id} class={`level-chip ${value === id ? 'active' : ''}`} style={{ '--lv': l.color }} onClick={() => onChange(id)}
             role="radio" aria-checked={value === id} aria-label={`${l.label}, ${l.age} Jahre`}>
+            <span class="chip-stars" aria-hidden="true">{l.stars}</span>
             <span class="chip-age">{l.age}</span>
             <span class="chip-unit">Jahre</span>
           </button>

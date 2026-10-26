@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'preact/hooks';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { go } from './router';
 import { actions, useStore } from './store';
 import { BackIcon } from './icons';
@@ -25,7 +25,8 @@ export function ParentArea({ catalog }: { catalog: Catalog }) {
 
 function Gate({ onOk }: { onOk: () => void }) {
   const { settings } = useStore();
-  const [a, b] = useMemo(() => [3 + Math.floor(Math.random() * 7), 4 + Math.floor(Math.random() * 6)], []);
+  // zweistellig × einstellig (12–19 × 3–9): für Kita- und Grundschulkinder zu schwer, für Eltern im Kopf lösbar
+  const [a, b] = useMemo(() => [12 + Math.floor(Math.random() * 8), 3 + Math.floor(Math.random() * 7)], []);
   const withPin = !!settings.pinHash;
   const answerLen = withPin ? PIN_LEN : String(a * b).length;
   const [input, setInput] = useState('');
@@ -57,6 +58,7 @@ function Gate({ onOk }: { onOk: () => void }) {
 function Settings({ catalog }: { catalog: Catalog }) {
   const { settings, recent } = useStore();
   const used = actions.printsUsedToday();
+  const [pinEditing, setPinEditing] = useState(false);
   const total = catalog.categories.reduce((n, c) => n + c.subcategories.reduce((m, s) => m + s.motifs.reduce((k, mo) => k + mo.images.length, 0), 0), 0);
   const shownLevels = catalog.levels.filter((l) => !settings.hiddenLevels.includes(l.id));
   const toggleLevel = (id: string) => {
@@ -67,6 +69,17 @@ function Settings({ catalog }: { catalog: Catalog }) {
 
   return (
     <main class="settings">
+      {!settings.pinHash && !settings.pinHintSeen && (
+        <section class="pin-hint">
+          <h2>PIN festlegen?</h2>
+          <p class="hint">Mit einer PIN kommen nur Erwachsene in diesen Bereich. Die Rechenaufgabe können ältere Kinder irgendwann lösen.</p>
+          <div class="row">
+            <button class="small" onClick={() => actions.updateSettings({ pinHintSeen: true })}>Später</button>
+            <button class="small primary" onClick={() => { actions.updateSettings({ pinHintSeen: true }); setPinEditing(true); }}>PIN festlegen</button>
+          </div>
+        </section>
+      )}
+
       <Categories catalog={catalog} />
 
       <section>
@@ -116,7 +129,7 @@ function Settings({ catalog }: { catalog: Catalog }) {
         </label>
       </section>
 
-      <PinSetup />
+      <PinSetup editing={pinEditing} setEditing={setPinEditing} />
 
       <section>
         <h2>Verlauf</h2>
@@ -199,9 +212,10 @@ function Categories({ catalog }: { catalog: Catalog }) {
   );
 }
 
-function PinSetup() {
+function PinSetup({ editing, setEditing }: { editing: boolean; setEditing: (v: boolean) => void }) {
   const { settings } = useStore();
-  const [editing, setEditing] = useState(false);
+  const ref = useRef<HTMLElement>(null);
+  useEffect(() => { if (editing) ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, [editing]);
   const [pin, setPin] = useState('');
   const [pin2, setPin2] = useState('');
   const valid = new RegExp(`^\\d{${PIN_LEN}}$`).test(pin) && pin === pin2;
@@ -211,7 +225,7 @@ function PinSetup() {
   };
   const digits = (v: string) => v.replace(/\D/g, '').slice(0, PIN_LEN);
   return (
-    <section>
+    <section ref={ref}>
       <h2>Zugang</h2>
       <p class="hint">
         {settings.pinHash

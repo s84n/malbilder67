@@ -179,6 +179,7 @@ img { -webkit-user-drag: none; }
 .level-chip:active { transform: scale(0.94); }
 .level-chip.active { background: var(--lv); color: #fff; transform: translateY(-2px) scale(1.06); box-shadow: 0 6px 0 color-mix(in srgb, var(--lv) 60%, #000); }
 .chip-age { font-size: clamp(21px, 5.6vw, 26px); font-weight: 700; line-height: 1; }
+.chip-stars { font-size: 13px; line-height: 1; letter-spacing: 1px; margin-bottom: 2px; }
 .chip-unit { font-size: 13px; font-weight: 600; opacity: 0.85; }
 .chip-all { --lv: #2b2d42; }
 .chip-dots { display: flex; gap: 4px; margin-bottom: 5px; }
@@ -192,6 +193,7 @@ img { -webkit-user-drag: none; }
   border: 3px solid #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
 }
 .age-badge small { font-size: 0.7em; }
+.age-badge .stars { font-size: 0.75em; letter-spacing: 0.05em; vertical-align: 0.08em; }
 .age-big { top: 14px; left: 14px; font-size: 22px; padding: 4px 14px 3px; }
 .tile-page { border-bottom-color: var(--tile); }
 
@@ -328,7 +330,7 @@ img { -webkit-user-drag: none; }
 .parent-btn {
   display: flex; flex-direction: column; align-items: center; gap: 1px;
   padding: 6px 8px; border-radius: 16px; min-width: 60px;
-  background: rgba(0, 0, 0, 0.06); color: #4a4d5e; font-size: 12px; font-weight: 700;
+  background: rgba(0, 0, 0, 0.06); color: #3a3c52; font-size: 13px; font-weight: 700;
 }
 .parent-btn:active { transform: scale(0.94); }
 .settings button.small { padding: 8px 14px; border-radius: 12px; background: #f5f1e8; font-size: 16px; }
@@ -342,3 +344,4 @@ img { -webkit-user-drag: none; }
 .settings .sub-row { padding-left: 38px; font-size: 16px; }
 .settings input[type="checkbox"]:disabled { opacity: 0.4; }
 .settings input.pin { width: 110px; font: inherit; font-size: 20px; letter-spacing: 6px; text-align: center; padding: 6px; border-radius: 12px; border: 1px solid #ddd; }
+.settings .pin-hint { border: 3px solid var(--accent); }

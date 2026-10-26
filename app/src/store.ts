@@ -7,6 +7,7 @@ export interface Settings {
   pinHash: string;          // SHA-256 der Eltern-PIN, leer = Rechenaufgabe
   dailyLimit: number;       // 0 = unbegrenzt
   showLabels: boolean;
+  pinHintSeen: boolean;     // Hinweis „PIN festlegen?“ beim ersten Öffnen des Eltern-Bereichs schon gezeigt
 }
 
 interface State {
@@ -18,7 +19,7 @@ interface State {
 
 const KEY = 'malbilder:v1';
 const defaults: State = {
-  settings: { level: 'all', hidden: [], hiddenLevels: [], pinHash: '', dailyLimit: 0, showLabels: true },
+  settings: { level: 'all', hidden: [], hiddenLevels: [], pinHash: '', dailyLimit: 0, showLabels: true, pinHintSeen: false },
   recent: [],
   printsDay: '',
   printsToday: 0,
