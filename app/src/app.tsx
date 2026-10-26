@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useState } from 'preact/hooks';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import type { ComponentChildren } from 'preact';
 import { asset, indexImages, loadCatalog } from './catalog';
 import { go, useRoute } from './router';
 import { actions, useStore } from './store';
-import { printImage } from './print';
+import { loadImageFile, printImage, shareImage } from './print';
 import { ParentArea } from './parents';
-import { BackIcon, LockIcon, PrinterIcon, ArrowIcon, SearchIcon } from './icons';
+import { BackIcon, LockIcon, PrinterIcon, ArrowIcon, SearchIcon, ShareIcon } from './icons';
 import { search } from './search';
 import { Logo } from './logo';
 import { Ticker } from './ticker';
@@ -184,40 +184,75 @@ function Gallery({ cat, sub, motif }: { cat: Category; sub: Subcategory; motif: 
 }
 
 function Detail({ refItem }: { refItem: ImageRef }) {
-  const store = useStore();
   const { image, motif, sub, cat } = refItem;
   const [celebrate, setCelebrate] = useState(false);
   const [blocked, setBlocked] = useState(false);
+  const file = useRef<File | null>(null);
+  const touch = useRef<{ x: number; y: number } | null>(null);
   const pos = motif.images.findIndex((i) => i.id === image.id);
+  const several = motif.images.length > 1;
   const neighbour = (d: number) => motif.images[(pos + d + motif.images.length) % motif.images.length];
+  const show = (d: number) => go('bild', ...neighbour(d).id.split('/'));
+
+  // Datei fürs Teilen schon beim Öffnen laden, nicht erst beim Tippen
+  useEffect(() => {
+    file.current = null;
+    let alive = true;
+    loadImageFile(asset(image.print), `malbild-${motif.id}.png`).then((f) => { if (alive) file.current = f; }, () => {});
+    return () => { alive = false; };
+  }, [image.id]);
+
+  // Zählt wie Drucken gegen das Tageslimit
+  const allowed = () => {
+    if (actions.printsLeft() <= 0) { setBlocked(true); return false; }
+    actions.recordPrint(image.id);
+    return true;
+  };
 
   const onPrint = async () => {
-    if (actions.printsLeft() <= 0) { setBlocked(true); return; }
-    actions.recordPrint(image.id);
+    if (!allowed()) return;
     setCelebrate(true);
     setTimeout(() => setCelebrate(false), 2500);
     await printImage(asset(image.print));
+  };
+
+  const onShare = () => {
+    if (allowed()) shareImage(asset(image.print), file.current, motif.label);
+  };
+
+  const onTouchStart = (e: TouchEvent) => { touch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY }; };
+  const onTouchEnd = (e: TouchEvent) => {
+    const start = touch.current;
+    touch.current = null;
+    if (!start || !several) return;
+    const dx = e.changedTouches[0].clientX - start.x, dy = e.changedTouches[0].clientY - start.y;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) show(dx < 0 ? 1 : -1);
   };
 
   return (
     <>
       <TopBar title={motif.label} up={() => go('k', cat.id, sub.id, motif.id)} />
       <main class="detail">
-        <div class="detail-stage">
-          {motif.images.length > 1 && <button class="round-btn nav prev" onClick={() => go('bild', ...neighbour(-1).id.split('/'))} aria-label="Vorheriges Bild"><ArrowIcon dir="left" /></button>}
+        <div class="detail-stage" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+          {several && <button class="round-btn nav prev" onClick={() => show(-1)} aria-label="Vorheriges Bild"><ArrowIcon dir="left" /></button>}
           <div class="paper">
             <AgeBadge level={image.level} big />
             <img src={asset(image.print)} alt={motif.label} style={{ backgroundImage: `url(${asset(image.thumb)})` }} draggable={false} />
           </div>
-          {motif.images.length > 1 && <button class="round-btn nav next" onClick={() => go('bild', ...neighbour(1).id.split('/'))} aria-label="Nächstes Bild"><ArrowIcon dir="right" /></button>}
+          {several && <button class="round-btn nav next" onClick={() => show(1)} aria-label="Nächstes Bild"><ArrowIcon dir="right" /></button>}
         </div>
-        <button class="print-btn" onClick={onPrint} aria-label="Drucken">
-          <PrinterIcon />
-          <span>Drucken</span>
-        </button>
-        {store.settings.printFallback && (
-          <a class="fallback-link" href={asset(image.print)} target="_blank" rel="noopener">Bild öffnen (zum Drucken über „Teilen“)</a>
+        {several && (
+          <div class="dots" aria-label={`Bild ${pos + 1} von ${motif.images.length}`}>
+            {motif.images.map((img, i) => <span key={img.id} class={i === pos ? 'on' : ''} />)}
+          </div>
         )}
+        <div class="print-bar">
+          <button class="print-btn" onClick={onPrint} aria-label="Drucken">
+            <PrinterIcon />
+            <span>Drucken</span>
+          </button>
+          <button class="share-btn" onClick={onShare}><ShareIcon /> Teilen oder speichern</button>
+        </div>
       </main>
       {celebrate && <div class="celebrate" aria-live="polite"><div class="burst">🎨</div><p>Viel Spaß beim Malen!</p></div>}
       {blocked && (

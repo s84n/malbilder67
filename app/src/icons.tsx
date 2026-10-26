@@ -17,3 +17,7 @@ export const PrinterIcon = () => (
     <path d="M7 9V3h10v6" /><rect x="3" y="9" width="18" height="8" rx="2" /><rect x="7" y="14" width="10" height="7" rx="1" fill="#fff" />
   </svg>
 );
+
+export const ShareIcon = () => (
+  <svg {...svg} width={22} height={22} stroke-width={2.2}><path d="M12 3v12M7 8l5-5 5 5" /><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" /></svg>
+);

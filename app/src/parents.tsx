@@ -104,10 +104,6 @@ function Settings({ catalog }: { catalog: Catalog }) {
           <span>Heute gedruckt: <b>{used}</b></span>
           <button class="small" onClick={() => actions.resetPrintCounter()}>Zähler zurücksetzen</button>
         </div>
-        <label class="row">
-          <span>„Bild öffnen“-Knopf zeigen<br /><small class="hint">Falls der Druckdialog auf einem Gerät nicht erscheint: Bild öffnen und über „Teilen → Drucken“ drucken.</small></span>
-          <input type="checkbox" checked={settings.printFallback} onChange={(e) => actions.updateSettings({ printFallback: e.currentTarget.checked })} />
-        </label>
         <p class="hint">Tipp: Im Druckdialog einmal den WLAN-Drucker, A4 und „Schwarzweiß“ wählen – iPad und Android merken sich das.</p>
       </section>
 

@@ -7,7 +7,6 @@ export interface Settings {
   pinHash: string;          // SHA-256 der Eltern-PIN, leer = Rechenaufgabe
   dailyLimit: number;       // 0 = unbegrenzt
   showLabels: boolean;
-  printFallback: boolean;   // zusätzlicher „Bild öffnen“-Knopf, falls Drucken im Gerät hakt
 }
 
 interface State {
@@ -19,7 +18,7 @@ interface State {
 
 const KEY = 'malbilder:v1';
 const defaults: State = {
-  settings: { level: 'all', hidden: [], hiddenLevels: [], pinHash: '', dailyLimit: 0, showLabels: true, printFallback: false },
+  settings: { level: 'all', hidden: [], hiddenLevels: [], pinHash: '', dailyLimit: 0, showLabels: true },
   recent: [],
   printsDay: '',
   printsToday: 0,
@@ -30,7 +29,8 @@ function read(): State {
     const raw = localStorage.getItem(KEY);
     if (raw) {
       const { favorites: _, ...s } = JSON.parse(raw);   // Favoriten gibt es seit v1.3 nicht mehr
-      return { ...defaults, ...s, settings: { ...defaults.settings, ...s.settings } };
+      const { printFallback: __, ...settings } = s.settings ?? {};   // seit v1.4 ersetzt durch „Teilen oder speichern“
+      return { ...defaults, ...s, settings: { ...defaults.settings, ...settings } };
     }
   } catch { /* privater Modus o.ä. – mit Standardwerten weiter */ }
   return structuredClone(defaults);

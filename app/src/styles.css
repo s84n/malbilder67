@@ -5,8 +5,8 @@
   --muted: #7a7d8c;
   --accent: #ffb703;
   --accent-dark: #fb8500;
-  --print: #2a9d8f;
-  --print-dark: #1f776c;
+  --print: #1f7a70;
+  --print-dark: #135048;
   --radius: 28px;
   --shadow: 0 6px 0 rgba(43, 45, 66, 0.12), 0 10px 24px rgba(43, 45, 66, 0.08);
   font-family: 'Fredoka Variable', 'Fredoka', system-ui, sans-serif;
@@ -169,23 +169,46 @@ img { -webkit-user-drag: none; }
 .tile-page { border-bottom-color: var(--tile); }
 
 /* ---------- Detailansicht ---------- */
-.detail { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 4px 16px calc(env(safe-area-inset-bottom) + 24px); }
-.detail-stage { display: flex; align-items: center; gap: 12px; width: 100%; justify-content: center; }
+/* Seite füllt den Bildschirm, damit die Druck-Leiste unten klebt; das Blatt nimmt den Rest der Höhe.
+   --reserve = Kopfzeile + Punkte + Druck-Leiste + Abstände (bei 360 × 640 geprüft). */
+.detail {
+  --nav: 64px; --gap: 12px; --pad: 16px; --reserve: 330px;
+  display: flex; flex-direction: column; align-items: center;
+  min-height: calc(100dvh - 84px - env(safe-area-inset-top));
+  padding-top: 4px;
+}
+.detail-stage {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: var(--gap);
+  width: 100%; padding: 0 var(--pad); touch-action: pan-y;
+}
 .paper {
-  position: relative;
+  position: relative; flex: none;
   /* Fester Rand: Prozent-Padding hängt an der Breite der Bühne → am PC riesiger Leerraum */
   background: #fff; border-radius: 10px; padding: 12px;
   box-shadow: 0 2px 0 rgba(0,0,0,.06), 0 18px 40px rgba(43, 45, 66, 0.18);
-  height: min(62dvh, 150vw); aspect-ratio: 210 / 297;
-  max-width: calc(100vw - 32px - 2 * 76px);
+  aspect-ratio: 210 / 297; width: auto;
+  /* so hoch wie Platz ist – aber nie breiter als der Platz zwischen den Pfeilen */
+  height: min(
+    calc(100dvh - var(--reserve) - env(safe-area-inset-top) - env(safe-area-inset-bottom)),
+    calc((100vw - 2 * (var(--pad) + var(--nav) + var(--gap))) * 297 / 210),
+    1100px
+  );
+  min-height: 240px;
 }
 .paper img { width: 100%; height: 100%; object-fit: contain; background-size: contain; background-repeat: no-repeat; background-position: center; }
-.nav { flex: none; }
-@media (max-width: 520px) {
-  .paper { max-width: calc(100vw - 32px); height: auto; width: 100%; }
-  .nav { position: absolute; z-index: 2; width: 52px; height: 52px; opacity: 0.9; }
-  .detail-stage { position: relative; }
-  .nav.prev { left: 4px; } .nav.next { right: 4px; }
+.nav { flex: none; width: var(--nav); height: var(--nav); }
+
+.dots { display: flex; justify-content: center; gap: 6px; margin: 12px 0 4px; }
+.dots span { width: 10px; height: 10px; border-radius: 999px; background: #d8d0bf; transition: width 0.2s; }
+.dots span.on { width: 22px; background: var(--ink); }
+
+.print-bar {
+  position: sticky; bottom: 0; z-index: 5;
+  width: 100%; margin-top: 12px;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  padding: 14px 16px calc(env(safe-area-inset-bottom) + 16px);
+  background: #fff; border-radius: 28px 28px 0 0;
+  box-shadow: 0 -6px 24px rgba(43, 45, 66, 0.10);
 }
 
 .print-btn {
@@ -194,12 +217,25 @@ img { -webkit-user-drag: none; }
   border-radius: 999px;
   background: var(--print); color: #fff;
   font-size: clamp(30px, 6vw, 42px); font-weight: 700; letter-spacing: 1px;
-  box-shadow: 0 10px 0 var(--print-dark), 0 18px 30px rgba(42, 157, 143, 0.35);
+  box-shadow: 0 10px 0 var(--print-dark), 0 18px 30px rgba(31, 122, 112, 0.35);
   transition: transform 0.1s, box-shadow 0.1s;
 }
 .print-btn:active { transform: translateY(8px); box-shadow: 0 2px 0 var(--print-dark); }
 .print-btn svg { width: 52px; height: 52px; }
-.fallback-link { color: var(--muted); font-size: 16px; }
+.share-btn {
+  min-height: 50px; width: min(100%, 520px); border-radius: 999px; border: 2px solid #d8d0bf;
+  background: #fff; font-size: 17px; font-weight: 600;
+  display: flex; gap: 8px; align-items: center; justify-content: center;
+}
+.share-btn:active { background: #f6f1e6; }
+
+@media (max-width: 520px) {
+  .detail { --nav: 44px; --gap: 6px; --pad: 10px; --reserve: 300px; }
+  .paper { padding: 8px; }
+  .age-big { top: 8px; left: 8px; font-size: 17px; }
+  .print-btn { min-height: 76px; font-size: 32px; box-shadow: 0 7px 0 var(--print-dark), 0 12px 24px rgba(31, 122, 112, 0.3); }
+  .print-btn svg { width: 40px; height: 40px; }
+}
 
 .celebrate {
   position: fixed; inset: 0; z-index: 50; pointer-events: none;
