@@ -173,7 +173,8 @@ img { -webkit-user-drag: none; }
 .detail-stage { display: flex; align-items: center; gap: 12px; width: 100%; justify-content: center; }
 .paper {
   position: relative;
-  background: #fff; border-radius: 10px; padding: 3%;
+  /* Fester Rand: Prozent-Padding hängt an der Breite der Bühne → am PC riesiger Leerraum */
+  background: #fff; border-radius: 10px; padding: 12px;
   box-shadow: 0 2px 0 rgba(0,0,0,.06), 0 18px 40px rgba(43, 45, 66, 0.18);
   height: min(62dvh, 150vw); aspect-ratio: 210 / 297;
   max-width: calc(100vw - 32px - 2 * 76px);
