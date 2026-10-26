@@ -6,6 +6,7 @@ import { hashPin } from './visible';
 import type { Catalog, Category } from './types';
 
 const PIN_LEN = 4;
+const fmtDate = (d: Date) => d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
 /** Eltern-Bereich, geschützt durch eine Rechenaufgabe oder – falls festgelegt – eine PIN. */
 export function ParentArea({ catalog }: { catalog: Catalog }) {
@@ -135,8 +136,14 @@ function Settings({ catalog }: { catalog: Catalog }) {
         </div>
       </section>
 
-      <p class="hint center">Alle Bilder sind KI-generiert (Stable Diffusion XL / Juggernaut XL) – private, nicht-kommerzielle Nutzung, es werden keine Rechte beansprucht.</p>
-      <p class="hint center">{total} Malbilder · Stand {new Date(catalog.version * 1000).toLocaleDateString('de-DE')}</p>
+      <section>
+        <h2>Über die App</h2>
+        <div class="row"><span>Malbilder</span><b>{total.toLocaleString('de-DE')}</b></div>
+        <div class="row"><span>Version</span><b>{__APP_VERSION__}</b></div>
+        <div class="row"><span>Veröffentlicht am</span><b>{fmtDate(new Date(__BUILD_DATE__))}</b></div>
+        <div class="row"><span>Bilder-Stand</span><b>{fmtDate(new Date(catalog.version * 1000))}</b></div>
+        <p class="hint">Alle Bilder sind KI-generiert (Stable Diffusion XL / Juggernaut XL) – private, nicht-kommerzielle Nutzung, es werden keine Rechte beansprucht.</p>
+      </section>
     </main>
   );
 }

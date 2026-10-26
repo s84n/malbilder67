@@ -8,7 +8,7 @@ import { ParentArea } from './parents';
 import { BackIcon, LockIcon, PrinterIcon, ArrowIcon, SearchIcon, ShareIcon } from './icons';
 import { search } from './search';
 import { Logo } from './logo';
-import { Ticker } from './ticker';
+import { SeasonCard } from './season';
 import { levelInfo, setLevels } from './levels';
 import { visibleCatalog } from './visible';
 import type { Catalog, Category, ImageRef, Motif, Subcategory } from './types';
@@ -54,7 +54,7 @@ function Screens({ catalog: full }: { catalog: Catalog }) {
     const motif = sub?.motifs.find((m) => m.id === rest[2]);
     if (cat && sub && motif) return <Gallery cat={cat} sub={sub} motif={motif} />;
   }
-  return <Home catalog={full} cats={cats} hasRecent={store.recent.some((id) => index.has(id))} />;
+  return <Home cats={cats} recent={store.recent.map((id) => index.get(id)).filter(Boolean).slice(0, 3) as ImageRef[]} />;
 }
 
 /* ---------- Bausteine ---------- */
@@ -101,21 +101,31 @@ const color = (i: number) => TILE_COLORS[i % TILE_COLORS.length];
 
 /* ---------- Screens ---------- */
 
-function Home({ catalog, cats, hasRecent }: { catalog: Catalog; cats: Category[]; hasRecent: boolean }) {
+function Home({ cats, recent }: { cats: Category[]; recent: ImageRef[] }) {
   return (
     <>
       <TopBar left={cats.length > 0 && <button class="round-btn" onClick={() => go('suche')} aria-label="Suchen"><SearchIcon /></button>} right={<button class="parent-btn" onClick={() => go('eltern')} aria-label="Eltern-Bereich"><LockIcon /><span>Eltern</span></button>} />
-      {cats.length > 0 && <Ticker cats={cats} />}
       {cats.length === 0 && <Message emoji="🖍️" text="Hier gibt es bald Malbilder!" />}
+      {cats.length > 0 && (
+        <div class="home-top">
+          <SeasonCard cats={cats} />
+          {recent.length > 0 && (
+            <section class="recent-row" aria-label="Zuletzt gedruckt">
+              <h2 class="home-h">Zuletzt gedruckt</h2>
+              <div class="recent-list">
+                {recent.map((r) => (
+                  <button key={r.image.id} class="recent-thumb" onClick={() => go('bild', ...r.image.id.split('/'))} aria-label={r.motif.label}>
+                    <img src={asset(r.image.thumb)} alt="" loading="lazy" draggable={false} />
+                  </button>
+                ))}
+                <button class="recent-all" onClick={() => go('zuletzt')}>Alle</button>
+              </div>
+            </section>
+          )}
+        </div>
+      )}
+      {cats.length > 0 && <h2 class="home-h home-themes">Alle Themen</h2>}
       <main class="grid grid-big">
-        {hasRecent && (catalog.recentIcon
-          ? <Tile img={catalog.recentIcon} label="Zuletzt gedruckt" color="#2a9d8f" onClick={() => go('zuletzt')} />
-          : (
-            <button class="tile tile-square tile-recent" onClick={() => go('zuletzt')} aria-label="Zuletzt gedruckt">
-              <span class="tile-emoji"><PrinterIcon /></span>
-              <span class="tile-label">Zuletzt gedruckt</span>
-            </button>
-          ))}
         {cats.map((c, i) => <Tile key={c.id} img={c.icon} label={c.label} color={color(i)} onClick={() => go('k', c.id)} />)}
       </main>
     </>
