@@ -80,33 +80,48 @@ img { -webkit-user-drag: none; }
 .recent-all { border: 2px dashed #c9bfa9; color: #5c5f73; font-size: 16px; font-weight: 600; }
 .recent-thumb:active, .recent-all:active { transform: scale(0.94); }
 
-/* ---------- Logo „MALBILDER67“ ---------- */
-.topbar-logo { overflow: visible !important; }
+/* ---------- Logo „Malbilder67“ ---------- */
+.topbar-logo { overflow: visible !important; display: flex; justify-content: center; }
+.logo {
+  --word: clamp(24px, 6.6vw, 46px);
+  display: inline-flex; align-items: center; gap: calc(var(--word) * 0.22);
+  line-height: 1; white-space: nowrap;
+}
+.logo-mark { width: calc(var(--word) * 1.45); height: calc(var(--word) * 1.45); flex: none; }
+.logo-text { display: flex; flex-direction: column; align-items: flex-start; }
+.logo-line { display: flex; align-items: flex-start; }
 .logo-word {
-  display: inline-flex; align-items: center; justify-content: center;
   font-family: 'Luckiest Guy', 'Fredoka Variable', system-ui, sans-serif;
-  line-height: 1; letter-spacing: 0.02em; white-space: nowrap;
+  font-size: var(--word); color: #2b2d42; letter-spacing: 0.02em;
+  padding-top: 0.12em;   /* Luckiest Guy sitzt sonst zu hoch */
 }
-.logo-big { font-size: clamp(30px, 8.2vw, 64px); padding: 6px 0 2px; }
-.logo-letter {
-  display: inline-block;
-  transform: rotate(var(--tilt));
-  -webkit-text-stroke: 0.12em #fff;
-  paint-order: stroke fill;
-  text-shadow: 0 0.07em 0 #2b2d42, 0 0.12em 0.08em rgba(43, 45, 66, 0.25);
-  animation: hop 0.6s both;
-}
-.logo-letter:nth-child(2n) { animation-delay: 0.05s; }
-.logo-letter:nth-child(3n) { animation-delay: 0.1s; }
 .logo-badge {
-  display: inline-block;
-  margin-left: 0.14em; padding: 0.2em 0.28em 0.08em;
-  font-size: 0.68em; line-height: 1; color: #fff;
-  background: #2b2d42; border: 0.1em solid #fff; border-radius: 0.38em;
-  box-shadow: 0 0.09em 0 #ffc300, 0 0.14em 0.1em rgba(43, 45, 66, 0.3);
-  transform: rotate(8deg) translateY(-0.15em);
+  display: grid; place-items: center;
+  width: 1.9em; height: 1.9em; margin-left: 0.25em; border-radius: 50%;
+  font-family: 'Luckiest Guy', 'Fredoka Variable', system-ui, sans-serif;
+  font-size: calc(var(--word) * 0.42); line-height: 1; padding-top: 0.15em;
+  background: #ffc300; color: #2b2d42;
+  box-shadow: 0 0.12em 0 rgba(43, 45, 66, 0.18);
+  transform: rotate(8deg);
 }
-@keyframes hop { from { opacity: 0; transform: translateY(-0.4em) rotate(var(--tilt)); } }
+.logo-wave { display: block; width: 100%; height: calc(var(--word) * 0.26); margin-top: 0.1em; overflow: visible; }
+.logo-small { --word: 25px; }
+.logo-small .logo-mark { width: 34px; height: 34px; }
+.logo-small .logo-wave { display: none; }
+
+/* Kompakte Kopfzeile nach dem Scrollen: 64 px, kleinere Knöpfe, kleines Logo */
+.topbar, .topbar .round-btn, .topbar .logo, .topbar .logo-mark, .topbar .logo-wave, .topbar .parent-btn {
+  transition: padding 0.2s, width 0.2s, height 0.2s, opacity 0.2s, margin 0.2s, min-height 0.2s;
+}
+.topbar.compact { padding-top: calc(env(safe-area-inset-top) + 8px); padding-bottom: 8px; min-height: calc(64px + env(safe-area-inset-top)); }
+.topbar.compact .round-btn { width: 48px; height: 48px; }
+.topbar.compact .logo { --word: 25px; }
+.topbar.compact .logo-mark { width: 34px; height: 34px; }
+.topbar.compact .logo-wave { height: 0; margin: 0; opacity: 0; }
+.topbar.compact .parent-btn { min-height: 48px; padding: 3px 8px; }
+@media (prefers-reduced-motion: reduce) {
+  .topbar, .topbar * { transition: none !important; }
+}
 
 .round-btn {
   width: 64px; height: 64px; border-radius: 50%;

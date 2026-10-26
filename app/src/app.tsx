@@ -66,9 +66,22 @@ function Screens({ catalog: full }: { catalog: Catalog }) {
 
 /* ---------- Bausteine ---------- */
 
+/** Kopfzeile wird nach dem Scrollen kompakt (mit Abstand zwischen den Schwellen, damit sie nicht flackert). */
+function useCompact() {
+  const [compact, setCompact] = useState(() => window.scrollY > 40);
+  useEffect(() => {
+    const onScroll = () => setCompact((c) => (c ? window.scrollY > 10 : window.scrollY > 40));
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  return compact;
+}
+
 function TopBar({ title, up, left, right }: { title?: string; up?: () => void; left?: ComponentChildren; right?: ComponentChildren }) {
+  const compact = useCompact();
   return (
-    <header class="topbar">
+    <header class={`topbar ${compact ? 'compact' : ''}`}>
       {up ? <button class="round-btn" onClick={up} aria-label="Zurück"><BackIcon /></button> : <div>{left}</div>}
       {title ? <h1>{title}</h1> : <h1 class="topbar-logo"><Logo /></h1>}
       <div class="topbar-right">{right}</div>
