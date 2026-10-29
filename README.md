@@ -13,29 +13,37 @@ Mal schnell ein Ausmalbild drucken, und das Kind wünscht sich einen Dino, ein E
 Statt sich durch Seiten voller Werbung und Pop-ups zu klicken, sucht sich das Kind das Bild hier selbst aus.
 Es braucht dafür nicht lesen zu können: große, bunte Bilder führen zum Ziel, ein großer Knopf druckt.
 
-- **Über 1.200 Malbilder** zu 17 Themen
-- **Für jedes Alter** – die Motive gibt es einfach (3–5 Jahre), mittel (5–8) und detailliert (8+)
+- **Über 2.300 Malbilder** zu 20 Themen
+- **Für jedes Alter** – die Motive gibt es einfach (3–5 Jahre ★), mittel (5–8 ★★) und detailliert (8+ ★★★)
 - **Druckt sauber auf A4** in Schwarzweiß, eine Seite pro Bild
+- **Suche** – einfach „Bagger“, „Pferd“ oder „Drache“ eintippen
+- **Passend zur Jahreszeit** – auf der Startseite stehen Halloween, Weihnachten, Ostern & Co., wenn es so weit ist
+- **Zuletzt gedruckt** – Lieblingsbilder schnell wiederfinden
 - **Funktioniert auf Tablet, Smartphone und PC** – am besten im Browser öffnen und
   „Zum Startbildschirm hinzufügen“, dann wirkt es wie eine App; schon angesehene Bilder gehen auch offline
 - **Kostenlos und werbefrei**, kein Konto, keine Cookies, keine Tracker
+
+![Bildseite am PC mit Altersstufen, Drucken und Herunterladen](docs/screenshot-desktop.png)
 
 ## Themen
 
 | | |
 |---|---|
-| 🦁 **Tiere** | Dinos, Bauernhof, Waldtiere, Haustiere, Safari & Zoo, Käfer & Schmetterlinge, Vögel, Kuschel-Stars |
-| 🐠 **Unterwasserwelt** | Delfin, Wal, Oktopus, Schildkröte, Hai, Seepferdchen … |
-| 🐴 **Pferde & Ponys** | Pferd, Pony, Fohlen, Reiten |
-| 🚗 **Fahrzeuge** | Autos, Baustelle, Feuerwehr & Polizei, Züge, Flugzeuge & Schiffe |
-| 🚀 **Weltraum** | Rakete, Astronaut, Planeten, Ufo … |
-| 🦄 **Fantasie** | Feen, Einhörner, Drachen, Meerjungfrauen, Prinzessinnen & Ritter |
-| 🤖 **Roboter** | vom Roboterhund bis zum Riesenroboter |
-| 🏰 **Häuser & Städte** | Burgen, Häuser, Stadt |
+| 🦁 **Tiere** | Bauernhof, Waldtiere, Haustiere, Safari & Zoo, Käfer & Schmetterlinge, Vögel, Polartiere, Tierbabys |
+| 🦖 **Dinos** | T-Rex, Triceratops, Stegosaurus, Brachiosaurus, Flugsaurier, Dino-Familie … |
+| 🐬 **Wasser & Meer** | Meerestiere, Korallenriff & Taucher, Strand & Hafen |
+| 🐴 **Pferde & Ponys** | Pferde, Reiterhof |
+| 🚗 **Fahrzeuge** | Autos, Baustelle, Einsatzfahrzeuge, Züge, Landwirtschaft, Fahrräder & Roller, Motorräder |
+| ✈️ **Flugzeuge** | Flugzeuge, Ballons & Luftschiffe, Am Flughafen |
+| ⛵ **Schiffe** | Segelschiffe, Boote, Große Schiffe |
+| 🚀 **Weltraum** | Planeten & Raketen, Außerirdische & Ufos |
+| 🦄 **Fantasie** | Feen, Einhörner, Drachen, Meerjungfrauen, Prinzessinnen & Ritter, Zauberer & Hexen, Fabelwesen |
+| 🤖 **Roboter** | Roboter, Roboter-Tiere, Riesen-Mechs |
+| 🏰 **Häuser & Städte** | Burgen, Häuser, Stadt, Spielplatz |
 | 🌻 **Natur** | Landschaften, Blumen & Pflanzen |
-| 👨‍👩‍👧 **Menschen** | Familie, Berufe, Spielen & Sport |
-| 🍦 **Essen** | Obst, Pizza, Eis, Süßigkeiten |
-| 🎂 **Feste** | Weihnachten, Ostern, Halloween, Geburtstag, Fasching, Schulanfang, Muttertag |
+| 👨‍👩‍👧 **Menschen** | Familie, Berufe, Kinder im Alltag |
+| 🍦 **Essen** | Obst & Gemüse, Gerichte, Süßigkeiten |
+| 🎂 **Feste & Feiertage** | Weihnachten, Ostern, Halloween, Geburtstag, Fasching, Muttertag |
 | 🏴‍☠️ **Abenteuer** | Piraten, Superhelden, Wilder Westen, Ninja |
 | ⚽ **Sport** | Wintersport, Wassersport, Ballsport, Turnen & Tanzen |
 | 🎸 **Musik** | Instrumente, Musizieren |
@@ -50,10 +58,13 @@ oder eine eigene PIN. Dort lässt sich einstellen:
 - **Themen ein- und ausblenden** – ganze Kategorien oder einzelne Bereiche, z. B. nur Halloween
 - **Altersstufen ausblenden** – z. B. die detaillierten Bilder für ein Kindergartenkind
 - **Tageslimit fürs Drucken** – damit nicht der ganze Papierstapel auf einmal draufgeht
+- **Beschriftung unter den Bildern** ein- oder ausblenden
 - Verlauf löschen, alles zurücksetzen
 
 **Drucken:** Der Knopf öffnet den normalen Druckdialog des Geräts (AirPrint auf iPhone/iPad, Druckdienst auf Android).
 Beim ersten Mal den WLAN-Drucker, A4 und „Schwarzweiß“ wählen – das Gerät merkt sich das.
+Darunter gibt es **„Teilen oder speichern“**: am Handy öffnet sich das Teilen-Menü (in Fotos sichern, verschicken …),
+am PC wird das Bild als PNG heruntergeladen.
 
 ## Datenschutz
 
