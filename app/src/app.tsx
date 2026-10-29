@@ -3,9 +3,9 @@ import type { ComponentChildren } from 'preact';
 import { asset, indexImages, loadCatalog } from './catalog';
 import { go, useRoute } from './router';
 import { actions, useStore } from './store';
-import { loadImageFile, printImage, shareImage } from './print';
+import { isDesktop, loadImageFile, printImage, shareImage } from './print';
 import { ParentArea } from './parents';
-import { BackIcon, LockIcon, PrinterIcon, ArrowIcon, SearchIcon, ShareIcon } from './icons';
+import { BackIcon, LockIcon, PrinterIcon, ArrowIcon, SearchIcon, ShareIcon, DownloadIcon } from './icons';
 import { search } from './search';
 import { Logo } from './logo';
 import { SeasonCard } from './season';
@@ -267,7 +267,7 @@ function Detail({ refItem }: { refItem: ImageRef }) {
   };
 
   const onShare = () => {
-    if (allowed()) shareImage(asset(image.print), file.current, motif.label);
+    if (allowed()) shareImage(asset(image.print), file.current, motif.label, `malbild-${motif.id}.png`);
   };
 
   const onTouchStart = (e: TouchEvent) => { touch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY }; };
@@ -318,7 +318,9 @@ function Detail({ refItem }: { refItem: ImageRef }) {
             <PrinterIcon />
             <span>Drucken</span>
           </button>
-          <button class="share-btn" onClick={onShare}><ShareIcon /> Teilen oder speichern</button>
+          <button class="share-btn" onClick={onShare}>
+            {isDesktop() ? <><DownloadIcon /> Bild herunterladen</> : <><ShareIcon /> Teilen oder speichern</>}
+          </button>
         </div>
       </main>
       {celebrate && <div class="celebrate" aria-live="polite"><div class="burst">🎨</div><p>Viel Spaß beim Malen!</p></div>}

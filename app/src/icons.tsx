@@ -21,3 +21,7 @@ export const PrinterIcon = () => (
 export const ShareIcon = () => (
   <svg {...svg} width={22} height={22} stroke-width={2.2}><path d="M12 3v12M7 8l5-5 5 5" /><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" /></svg>
 );
+
+export const DownloadIcon = () => (
+  <svg {...svg} width={22} height={22} stroke-width={2.2}><path d="M12 3v12M7 10l5 5 5-5" /><path d="M5 19h14" /></svg>
+);

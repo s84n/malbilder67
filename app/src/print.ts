@@ -26,12 +26,28 @@ export async function loadImageFile(url: string, name: string): Promise<File> {
   return new File([blob], name, { type: blob.type || 'image/png' });
 }
 
+/** Rechner mit Maus: dort gibt es kein brauchbares Teilen-Menü, also direkt herunterladen. */
+export const isDesktop = () => matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+/** Bild als Datei herunterladen (landet im Download-Ordner). */
+export async function downloadImage(url: string, file: File | null, name: string): Promise<void> {
+  const blob = file ?? await (await fetch(url)).blob();
+  const href = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = href;
+  a.download = file?.name ?? name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(href), 10_000);
+}
+
 /**
  * Teilen-Menü des Geräts öffnen (Drucken, in Fotos/Dateien sichern, an Oma schicken …).
- * Ohne Datei-Teilen (z. B. Desktop-Firefox) wird das Bild in einem neuen Tab geöffnet.
+ * Am Rechner oder ohne Datei-Teilen (z. B. Firefox) wird das Bild heruntergeladen.
  */
-export async function shareImage(url: string, file: File | null, title: string): Promise<void> {
-  if (file && navigator.canShare?.({ files: [file] })) {
+export async function shareImage(url: string, file: File | null, title: string, name: string): Promise<void> {
+  if (!isDesktop() && file && navigator.canShare?.({ files: [file] })) {
     try {
       await navigator.share({ files: [file], title });
       return;
@@ -39,5 +55,5 @@ export async function shareImage(url: string, file: File | null, title: string):
       if ((e as Error).name === 'AbortError') return;   // Menü vom Nutzer geschlossen
     }
   }
-  window.open(url, '_blank', 'noopener');
+  await downloadImage(url, file, name);
 }
