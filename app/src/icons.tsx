@@ -10,6 +10,8 @@ export const LockIcon = () => (
   <svg {...svg} width={24} height={24} stroke-width={2}><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>
 );
 
+export const HomeIcon = () => <svg {...svg}><path d="M4 11l8-7 8 7" /><path d="M6 10v10h12V10" /><path d="M10 20v-5h4v5" /></svg>;
+
 export const SearchIcon = () => <svg {...svg}><circle cx="10.5" cy="10.5" r="6.5" /><path d="M15.5 15.5L21 21" /></svg>;
 
 export const PrinterIcon = () => (

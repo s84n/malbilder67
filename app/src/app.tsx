@@ -5,7 +5,7 @@ import { go, useRoute } from './router';
 import { actions, useStore } from './store';
 import { isDesktop, loadImageFile, printImage, shareImage } from './print';
 import { ParentArea } from './parents';
-import { BackIcon, LockIcon, PrinterIcon, ArrowIcon, SearchIcon, ShareIcon, DownloadIcon } from './icons';
+import { BackIcon, LockIcon, PrinterIcon, ArrowIcon, SearchIcon, ShareIcon, DownloadIcon, HomeIcon } from './icons';
 import { search } from './search';
 import { Logo } from './logo';
 import { SeasonCard } from './season';
@@ -78,14 +78,15 @@ function useCompact() {
   return compact;
 }
 
-function TopBar({ title, up, left, right, search }: { title?: string; up?: () => void; left?: ComponentChildren; right?: ComponentChildren; search?: boolean }) {
+/** `home`: Haus-Knopf rechts oben – springt von tieferen Seiten direkt zur Startseite. */
+function TopBar({ title, up, left, right, search, home }: { title?: string; up?: () => void; left?: ComponentChildren; right?: ComponentChildren; search?: boolean; home?: boolean }) {
   const compact = useCompact();
   return (
     <header class={`topbar ${compact ? 'compact' : ''} ${search ? 'topbar-home' : ''}`}>
       {up ? <button class="round-btn" onClick={up} aria-label="Zurück"><BackIcon /></button> : <div class="topbar-left">{left}</div>}
       {title ? <h1>{title}</h1> : <h1 class="topbar-logo"><Logo /></h1>}
       {search && <HeaderSearch />}
-      <div class="topbar-right">{right}</div>
+      <div class="topbar-right">{home ? <button class="round-btn" onClick={() => go()} aria-label="Startseite"><HomeIcon /></button> : right}</div>
     </header>
   );
 }
@@ -185,7 +186,7 @@ function MotifList({ cat, sub }: { cat: Category; sub: Subcategory }) {
   const single = cat.subcategories.length === 1;
   return (
     <>
-      <TopBar title={single ? cat.label : sub.label} up={() => (single ? go() : go('k', cat.id))} />
+      <TopBar title={single ? cat.label : sub.label} up={() => (single ? go() : go('k', cat.id))} home={!single} />
       <main class="grid grid-pages">
         {sub.motifs.map((m) => <Tile key={m.id} img={m.thumb} label={m.label} color={catColor(cat)} square={false} onClick={() => go('k', cat.id, sub.id, m.id)} />)}
       </main>
@@ -223,7 +224,7 @@ function Gallery({ cat, sub, motif }: { cat: Category; sub: Subcategory; motif: 
   const single = cat.subcategories.length === 1;
   return (
     <>
-      <TopBar title={motif.label} up={() => (single ? go('k', cat.id) : go('k', cat.id, sub.id))} />
+      <TopBar title={motif.label} up={() => (single ? go('k', cat.id) : go('k', cat.id, sub.id))} home />
       {levels.length > 1 && <LevelFilter value={level} onChange={setLevel} levels={levels} />}
       <main class="grid grid-pages">
         {images.map((img) => <Tile key={img.id} img={img.thumb} label="" color={levelInfo(img.level).color} level={img.level} square={false} onClick={() => go('bild', ...img.id.split('/'))} />)}
@@ -281,7 +282,7 @@ function Detail({ refItem }: { refItem: ImageRef }) {
 
   return (
     <>
-      <TopBar title={motif.label} up={() => go('k', cat.id, sub.id, motif.id)} />
+      <TopBar title={motif.label} up={() => go('k', cat.id, sub.id, motif.id)} home />
       <main class="detail">
         <div class="detail-left">
           <div class="detail-stage" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
