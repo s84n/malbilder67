@@ -13,7 +13,7 @@ Mal schnell ein Ausmalbild drucken, und das Kind wünscht sich einen Dino, ein E
 Statt sich durch Seiten voller Werbung und Pop-ups zu klicken, sucht sich das Kind das Bild hier selbst aus.
 Es braucht dafür nicht lesen zu können: große, bunte Bilder führen zum Ziel, ein großer Knopf druckt.
 
-- **Über 2.300 Malbilder** zu 20 Themen
+- **Über 2.400 Malbilder** zu 20 Themen
 - **Für jedes Alter** – die Motive gibt es einfach (3–5 Jahre ★), mittel (5–8 ★★) und detailliert (8+ ★★★)
 - **Druckt sauber auf A4** in Schwarzweiß, eine Seite pro Bild
 - **Suche** – einfach „Bagger“, „Pferd“ oder „Drache“ eintippen
@@ -43,7 +43,7 @@ Es braucht dafür nicht lesen zu können: große, bunte Bilder führen zum Ziel,
 | 🌻 **Natur** | Landschaften, Blumen & Pflanzen |
 | 👨‍👩‍👧 **Menschen** | Familie, Berufe, Kinder im Alltag |
 | 🍦 **Essen** | Obst & Gemüse, Gerichte, Süßigkeiten |
-| 🎂 **Feste & Feiertage** | Weihnachten, Ostern, Halloween, Geburtstag, Fasching, Muttertag |
+| 🎂 **Feste & Feiertage** | Weihnachten, Ostern, Halloween (mit vielen Kürbissen), Geburtstag, Fasching, Muttertag |
 | 🏴‍☠️ **Abenteuer** | Piraten, Superhelden, Wilder Westen, Ninja |
 | ⚽ **Sport** | Wintersport, Wassersport, Ballsport, Turnen & Tanzen |
 | 🎸 **Musik** | Instrumente, Musizieren |
